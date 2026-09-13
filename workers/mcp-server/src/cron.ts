@@ -25,51 +25,71 @@ export async function handleMonthlyReset(
     nextMonth.setHours(0, 0, 0, 0);
     const nextResetIso = nextMonth.toISOString();
 
-    // 1. Fetch user documents from Firestore REST API
-    const listUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/users?pageSize=300`;
-    const listRes = await fetch(listUrl);
+    // 1. Paginate through all user documents in Firestore
+    let pageToken: string | undefined = undefined;
+    const allUserDocNames: string[] = [];
 
-    if (!listRes.ok) {
-      console.error(`[RankForge Cron] Failed to list users: ${listRes.status}`);
-      return;
-    }
+    do {
+      const pageParam = pageToken ? `&pageToken=${encodeURIComponent(pageToken)}` : '';
+      const listUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/users?pageSize=300${pageParam}`;
+      const listRes = await fetch(listUrl);
 
-    const listData = (await listRes.json()) as {
-      documents?: Array<{
-        name: string; // projects/.../databases/(default)/documents/users/{uid}
-        fields?: Record<string, unknown>;
-      }>;
-    };
+      if (!listRes.ok) {
+        console.error(`[RankForge Cron] Failed to list users: ${listRes.status}`);
+        break;
+      }
 
-    const docs = listData.documents || [];
-    console.log(`[RankForge Cron] Found ${docs.length} users to evaluate for reset.`);
-
-    // 2. Reset audits_used for each user
-    let resetCount = 0;
-    for (const doc of docs) {
-      const docName = doc.name; // Full document path
-      const patchUrl = `https://firestore.googleapis.com/v1/${docName}?updateMask.fieldPaths=audits_used&updateMask.fieldPaths=reset_date&updateMask.fieldPaths=updated_at`;
-
-      const patchBody = {
-        fields: {
-          audits_used: { integerValue: '0' },
-          reset_date: { timestampValue: nextResetIso },
-          updated_at: { timestampValue: new Date().toISOString() }
-        }
+      const listData = (await listRes.json()) as {
+        documents?: Array<{ name: string }>;
+        nextPageToken?: string;
       };
 
+      if (listData.documents) {
+        for (const doc of listData.documents) {
+          allUserDocNames.push(doc.name);
+        }
+      }
+
+      pageToken = listData.nextPageToken;
+    } while (pageToken);
+
+    console.log(`[RankForge Cron] Found ${allUserDocNames.length} total users to reset across all pages.`);
+
+    // 2. Batch commit updates in chunks of 250 (Firestore limit is 500 writes/commit)
+    let resetCount = 0;
+    const chunkSize = 250;
+    const commitUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents:commit`;
+
+    for (let i = 0; i < allUserDocNames.length; i += chunkSize) {
+      const chunk = allUserDocNames.slice(i, i + chunkSize);
+      const writes = chunk.map(docName => ({
+        update: {
+          name: docName,
+          fields: {
+            audits_used: { integerValue: '0' },
+            reset_date: { timestampValue: nextResetIso },
+            updated_at: { timestampValue: new Date().toISOString() }
+          }
+        },
+        updateMask: {
+          fieldPaths: ['audits_used', 'reset_date', 'updated_at']
+        }
+      }));
+
       try {
-        const patchRes = await fetch(patchUrl, {
-          method: 'PATCH',
+        const commitRes = await fetch(commitUrl, {
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(patchBody)
+          body: JSON.stringify({ writes })
         });
 
-        if (patchRes.ok) {
-          resetCount++;
+        if (commitRes.ok) {
+          resetCount += chunk.length;
+        } else {
+          console.error(`[RankForge Cron] Batch commit chunk failed: ${commitRes.status}`);
         }
-      } catch (patchErr) {
-        console.error(`[RankForge Cron] Error resetting user ${docName}:`, patchErr);
+      } catch (chunkErr) {
+        console.error('[RankForge Cron] Error during batch commit:', chunkErr);
       }
     }
 

@@ -18,11 +18,17 @@ export async function onRequestPost(context) {
 
   const webhookSecret = context.env?.DODO_WEBHOOK_SECRET;
 
-  // 1. Verify webhook signature if secret is configured
-  if (webhookSecret && signature) {
+  // 1. Verify webhook signature FIRST before any processing
+  if (webhookSecret) {
+    if (!signature) {
+      return new Response(JSON.stringify({ error: 'Unauthorized: Missing webhook signature' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
     const isValid = await verifyHmacSha256(rawBody, signature, webhookSecret);
     if (!isValid) {
-      return new Response(JSON.stringify({ error: 'Invalid webhook signature' }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized: Invalid webhook signature' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -57,7 +63,7 @@ export async function onRequestPost(context) {
   switch (eventType) {
     case 'subscription.created':
     case 'subscription.updated': {
-      let targetPlan = (metadata.plan as 'free' | 'pro' | 'agency' | 'enterprise') || 'pro';
+      let targetPlan = metadata.plan || 'pro';
       const productId = data.product_id || '';
 
       if (productId.includes('agency')) targetPlan = 'agency';
@@ -70,6 +76,7 @@ export async function onRequestPost(context) {
         plan: targetPlan,
         audits_limit: limits.audits_limit,
         projects_limit: limits.projects_limit,
+        subscription_status: 'active',
         dodo_subscription_id: data.subscription_id || data.id,
         dodo_customer_id: data.customer_id || data.customer?.customer_id,
         updated_at: new Date().toISOString()
@@ -78,21 +85,38 @@ export async function onRequestPost(context) {
     }
 
     case 'subscription.cancelled': {
-      const freeLimits = PLAN_LIMITS.free;
-      await updateFirestoreUser(uid, projectId, {
-        plan: 'free',
-        audits_limit: freeLimits.audits_limit,
-        projects_limit: freeLimits.projects_limit,
-        updated_at: new Date().toISOString()
-      });
+      // In SaaS billing, check if cancel_at_period_end is set
+      const cancelAtPeriodEnd = data.cancel_at_period_end || data.status === 'cancelling';
+      const periodEnd = data.current_period_end || data.next_billing_date;
+
+      if (cancelAtPeriodEnd && periodEnd && new Date(periodEnd).getTime() > Date.now()) {
+        // Honor current period until periodEnd; mark status as cancelling
+        await updateFirestoreUser(uid, projectId, {
+          subscription_status: 'cancelling',
+          cancellation_effective_at: periodEnd,
+          updated_at: new Date().toISOString()
+        });
+      } else {
+        // Immediate downgrade or period has expired
+        const freeLimits = PLAN_LIMITS.free;
+        await updateFirestoreUser(uid, projectId, {
+          plan: 'free',
+          audits_limit: freeLimits.audits_limit,
+          projects_limit: freeLimits.projects_limit,
+          subscription_status: 'cancelled',
+          updated_at: new Date().toISOString()
+        });
+      }
       break;
     }
 
     case 'payment.failed': {
-      // Payment failure alert logging
+      // Payment failure: Plan is NOT immediately cancelled (grace period logic)
       console.warn(`Payment failed for user ${uid}, subscription ${data.subscription_id}`);
       await updateFirestoreUser(uid, projectId, {
         payment_status: 'failed',
+        payment_failed_at: new Date().toISOString(),
+        has_payment_alert: true,
         updated_at: new Date().toISOString()
       });
       break;
@@ -111,15 +135,11 @@ export async function onRequestPost(context) {
 /**
  * Updates user document in Firestore via REST API
  */
-async function updateFirestoreUser(
-  uid: string,
-  projectId: string | undefined,
-  fieldsToUpdate: Record<string, unknown>
-): Promise<void> {
+async function updateFirestoreUser(uid, projectId, fieldsToUpdate) {
   if (!projectId) return;
 
-  const fields: Record<string, unknown> = {};
-  const fieldPaths: string[] = [];
+  const fields = {};
+  const fieldPaths = [];
 
   for (const [key, value] of Object.entries(fieldsToUpdate)) {
     fieldPaths.push(`updateMask.fieldPaths=${key}`);
@@ -146,11 +166,7 @@ async function updateFirestoreUser(
 /**
  * Validates HMAC-SHA256 signature
  */
-async function verifyHmacSha256(
-  payload: string,
-  signature: string,
-  secret: string
-): Promise<boolean> {
+async function verifyHmacSha256(payload, signature, secret) {
   try {
     const enc = new TextEncoder();
     const key = await crypto.subtle.importKey(
@@ -162,7 +178,7 @@ async function verifyHmacSha256(
     );
 
     // Signature can be hex or base64
-    let sigBytes: Uint8Array;
+    let sigBytes;
     const cleanSig = signature.replace(/^t=\d+,v1=/, '').trim();
 
     if (/^[0-9a-fA-F]+$/.test(cleanSig)) {

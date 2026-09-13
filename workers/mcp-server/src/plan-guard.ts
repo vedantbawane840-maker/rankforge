@@ -89,15 +89,15 @@ export async function enforcePlanLimits(
 
 /**
  * Increments the user's audit usage counter in Firestore and D1 if available.
+ * Uses atomic field transforms in Firestore and ON CONFLICT upsert in D1
+ * to eliminate race conditions under concurrent requests.
  */
 export async function recordAuditUsage(
   uid: string,
   currentUsed: number,
   env: WorkerEnv
 ): Promise<void> {
-  const newCount = currentUsed + 1;
-
-  // 1. Fast Edge record in D1 if available
+  // 1. Fast Edge record in D1 if available (atomic SQL upsert)
   if (env.DB) {
     try {
       await env.DB.prepare(
@@ -112,10 +112,33 @@ export async function recordAuditUsage(
     }
   }
 
-  // 2. Persistent update in Firestore
+  // 2. Persistent atomic transform in Firestore
   if (env.FIREBASE_PROJECT_ID) {
     try {
-      await updateUserPlanData(uid, { audits_used: newCount }, env);
+      const commitUrl = `https://firestore.googleapis.com/v1/projects/${env.FIREBASE_PROJECT_ID}/databases/(default)/documents:commit`;
+      await fetch(commitUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          writes: [
+            {
+              transform: {
+                document: `projects/${env.FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${uid}`,
+                fieldTransforms: [
+                  {
+                    fieldPath: 'audits_used',
+                    increment: { integerValue: '1' }
+                  },
+                  {
+                    fieldPath: 'updated_at',
+                    setToServerValue: 'REQUEST_TIME'
+                  }
+                ]
+              }
+            }
+          ]
+        })
+      });
     } catch {
       // Non-blocking log/ignore
     }
