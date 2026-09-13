@@ -5,7 +5,7 @@
   "scripts": {
     "dev:pages": "wrangler pages dev pages/",
     "dev:worker": "cd workers/mcp-server && wrangler dev",
-    "deploy:pages": "wrangler pages deploy pages/",
+    "deploy:pages": "wrangler pages deploy pages/ --project-name rankforgeapp",
     "deploy:worker": "cd workers/mcp-server && wrangler deploy",
     "deploy:all": "npm run deploy:pages && npm run deploy:worker",
     "typecheck": "cd workers/mcp-server && npm run typecheck",
