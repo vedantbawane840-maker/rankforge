@@ -26,12 +26,12 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 export const firebaseConfig = {
-  apiKey: window.__RANKFORGE_FIREBASE_API_KEY || "AIzaSyDemoRankForgeKeyForLocalDev",
-  authDomain: window.__RANKFORGE_AUTH_DOMAIN || "rankforge-app.firebaseapp.com",
-  projectId: window.__RANKFORGE_PROJECT_ID || "rankforge-app",
-  storageBucket: "rankforge-app.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef123456"
+  apiKey: window.__RANKFORGE_FIREBASE_API_KEY || "AIzaSyDIsjwnzAF08DMAnDrxYGLH_gKTx8riqpc",
+  authDomain: window.__RANKFORGE_AUTH_DOMAIN || "rankforge-mcp-app.firebaseapp.com",
+  projectId: window.__RANKFORGE_PROJECT_ID || "rankforge-mcp-app",
+  storageBucket: "rankforge-mcp-app.firebasestorage.app",
+  messagingSenderId: "227686197997",
+  appId: "1:227686197997:web:d59d810f1159a58a7efae4"
 };
 
 let app;

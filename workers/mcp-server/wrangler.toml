@@ -3,8 +3,8 @@ main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
 [vars]
-FIREBASE_PROJECT_ID = ""
-FIREBASE_WEB_API_KEY = ""
+FIREBASE_PROJECT_ID = "rankforge-mcp-app"
+FIREBASE_WEB_API_KEY = "AIzaSyDIsjwnzAF08DMAnDrxYGLH_gKTx8riqpc"
 # Note: ENCRYPTION_KEY must be stored as a Cloudflare Secret (wrangler secret put ENCRYPTION_KEY)
 
 [[d1_databases]]
