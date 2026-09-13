@@ -49,6 +49,18 @@ function initDashboard() {
     // Fetch user & plan data
     await loadUserProfile();
 
+    // Check for successful payment return from Dodo Payments
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('upgrade') === 'success') {
+      const upgradedPlan = urlParams.get('plan') || 'pro';
+      if (userData) {
+        userData.plan = upgradedPlan;
+        userData.audits_limit = upgradedPlan === 'agency' ? 500 : (upgradedPlan === 'enterprise' ? 999999 : 100);
+        renderOverview(userData);
+      }
+      showToast('🎉 Payment successful! Your subscription has been activated.');
+    }
+
     // Setup interactive elements
     setupApiKeysPanel();
     setupUsagePanel();

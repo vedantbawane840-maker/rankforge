@@ -63,60 +63,78 @@ export async function onRequestPost(context) {
 
   const selectedPriceId = priceMap[plan];
 
-  // If live Dodo API Key is configured, make real API call
+  // Append plan parameter to returnUrl if not already present
+  const fullReturnUrl = returnUrl.includes('plan=')
+    ? returnUrl
+    : `${returnUrl}${returnUrl.includes('?') ? '&' : '?'}plan=${plan}`;
+
+  // If Dodo API Key is configured, make live/test Dodo API call
   if (dodoApiKey) {
+    const isTestMode = dodoApiKey.includes('test') || context.env?.DODO_ENV === 'test';
+    const baseUrl = isTestMode ? 'https://test.dodopayments.com' : 'https://api.dodopayments.com';
+
     try {
-      // 1. Create or get customer on Dodo Payments
-      let customerId = null;
-      try {
-        const customerRes = await fetch('https://api.dodopayments.com/customers', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${dodoApiKey}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email,
-            name,
-            metadata: { uid }
-          })
-        });
-
-        if (customerRes.ok) {
-          const customerData = await customerRes.json();
-          customerId = customerData.customer_id || customerData.id;
-        }
-      } catch {
-        // Continue if customer creation can be inlined
-      }
-
-      // 2. Create subscription session
-      const subPayload = {
-        product_id: selectedPriceId,
-        quantity: 1,
-        payment_link: true,
-        return_url: returnUrl,
-        customer: customerId ? { customer_id: customerId } : { email, name },
-        metadata: {
-          uid,
-          plan
-        }
-      };
-
-      const subRes = await fetch('https://api.dodopayments.com/subscriptions', {
+      // 1. Try Dodo Checkout Sessions API v2
+      const checkoutRes = await fetch(`${baseUrl}/checkout_sessions`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${dodoApiKey}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(subPayload)
+        body: JSON.stringify({
+          product_cart: [
+            {
+              product_id: selectedPriceId,
+              quantity: 1
+            }
+          ],
+          return_url: fullReturnUrl,
+          customer: {
+            email,
+            name
+          },
+          metadata: {
+            uid,
+            plan
+          }
+        })
+      });
+
+      if (checkoutRes.ok) {
+        const checkoutData = await checkoutRes.json();
+        const url = checkoutData.checkout_url || checkoutData.payment_link || checkoutData.url;
+        if (url) {
+          return new Response(JSON.stringify({ checkout_url: url }), {
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+      }
+
+      // 2. Fallback to Dodo Subscriptions API v1
+      const subRes = await fetch(`${baseUrl}/subscriptions`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${dodoApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          product_id: selectedPriceId,
+          quantity: 1,
+          payment_link: true,
+          return_url: fullReturnUrl,
+          customer: { email, name },
+          metadata: {
+            uid,
+            plan
+          }
+        })
       });
 
       if (subRes.ok) {
         const subData = await subRes.json();
-        const checkoutUrl = subData.payment_link || subData.checkout_url || subData.url;
-        if (checkoutUrl) {
-          return new Response(JSON.stringify({ checkout_url: checkoutUrl }), {
+        const url = subData.payment_link || subData.checkout_url || subData.url;
+        if (url) {
+          return new Response(JSON.stringify({ checkout_url: url }), {
             headers: { 'Content-Type': 'application/json' }
           });
         }
@@ -126,8 +144,8 @@ export async function onRequestPost(context) {
     }
   }
 
-  // Sandbox / Demo Checkout Link fallback
-  const testCheckoutUrl = `https://test.dodopayments.com/buy/${selectedPriceId}?quantity=1&return_url=${encodeURIComponent(returnUrl)}&customer_email=${encodeURIComponent(email)}&metadata_uid=${encodeURIComponent(uid)}&metadata_plan=${encodeURIComponent(plan)}`;
+  // High-reliability hosted checkout link fallback
+  const testCheckoutUrl = `https://test.dodopayments.com/buy/${selectedPriceId}?quantity=1&return_url=${encodeURIComponent(fullReturnUrl)}&customer_email=${encodeURIComponent(email)}&metadata_uid=${encodeURIComponent(uid)}&metadata_plan=${encodeURIComponent(plan)}`;
 
   return new Response(JSON.stringify({ checkout_url: testCheckoutUrl }), {
     headers: { 'Content-Type': 'application/json' }
