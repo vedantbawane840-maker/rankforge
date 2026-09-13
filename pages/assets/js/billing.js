@@ -115,8 +115,55 @@ export async function handleCheckout(planKey) {
   }
 }
 
+/**
+ * Highlights active plan on pricing page if user is logged in
+ */
+export async function highlightCurrentPlan() {
+  try {
+    const token = await getUserAuthToken();
+    if (!token) return;
+
+    const res = await fetch('/api/user', {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (!res.ok) return;
+
+    const data = await res.json();
+    const currentPlan = (data.plan || 'free').toLowerCase();
+
+    document.querySelectorAll('[data-plan-card]').forEach(card => {
+      const plan = card.getAttribute('data-plan-card');
+      if (plan === currentPlan) {
+        card.style.borderColor = 'var(--color-success)';
+        card.style.boxShadow = '0 0 0 1px var(--color-success)';
+
+        const badge = document.createElement('div');
+        badge.className = 'badge badge-success';
+        badge.textContent = 'CURRENT PLAN';
+        badge.style.marginBottom = '0.5rem';
+        badge.style.alignSelf = 'flex-start';
+        card.prepend(badge);
+
+        const btn = card.querySelector('[data-plan-checkout], a[href*="login"]');
+        if (btn) {
+          btn.textContent = 'Active Plan ✓';
+          btn.classList.remove('btn-primary');
+          btn.classList.add('btn-secondary');
+          btn.disabled = true;
+          btn.style.opacity = '0.75';
+          btn.style.cursor = 'default';
+        }
+      }
+    });
+  } catch {
+    // Non-blocking
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('pricePro')) {
     initBilling();
+    highlightCurrentPlan();
   }
 });
+

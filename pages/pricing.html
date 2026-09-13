@@ -45,7 +45,7 @@
         <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-top: 1.75rem;">
           <span style="font-size: 0.9rem; font-weight: 500;">Monthly</span>
           <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
-            <input type="checkbox" id="billingIntervalToggle" style="opacity: 0; width: 0; height: 0;">
+            <input type="checkbox" id="billingIntervalToggle" aria-label="Toggle between monthly and annual billing" style="opacity: 0; width: 0; height: 0;">
             <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; transition: .2s;"></span>
           </label>
           <span style="font-size: 0.9rem; font-weight: 500;">Annual <span class="badge badge-success" style="margin-left: 0.25rem;">Save 20%</span></span>
@@ -56,7 +56,7 @@
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 4rem;">
         
         <!-- FREE Plan -->
-        <div class="card" style="display: flex; flex-direction: column;">
+        <div class="card" data-plan-card="free" style="display: flex; flex-direction: column;">
           <h3>FREE</h3>
           <div style="margin: 0.75rem 0 1.5rem 0;">
             <span style="font-size: 2.5rem; font-weight: 700;">$0</span>
@@ -76,7 +76,7 @@
         </div>
 
         <!-- PRO Plan (Most Popular) -->
-        <div class="card" style="display: flex; flex-direction: column; border-color: var(--accent-blue); position: relative;">
+        <div class="card" data-plan-card="pro" style="display: flex; flex-direction: column; border-color: var(--accent-blue); position: relative;">
           <div style="position: absolute; top: 1rem; right: 1rem;">
             <span class="badge badge-blue">MOST POPULAR</span>
           </div>
@@ -101,7 +101,7 @@
         </div>
 
         <!-- AGENCY Plan -->
-        <div class="card" style="display: flex; flex-direction: column;">
+        <div class="card" data-plan-card="agency" style="display: flex; flex-direction: column;">
           <h3>AGENCY</h3>
           <div style="margin: 0.75rem 0 1.5rem 0;">
             <span id="priceAgency" style="font-size: 2.5rem; font-weight: 700;">$79</span>
@@ -121,7 +121,7 @@
         </div>
 
         <!-- ENTERPRISE Plan -->
-        <div class="card" style="display: flex; flex-direction: column;">
+        <div class="card" data-plan-card="enterprise" style="display: flex; flex-direction: column;">
           <h3>ENTERPRISE</h3>
           <div style="margin: 0.75rem 0 1.5rem 0;">
             <span id="priceEnterprise" style="font-size: 2.5rem; font-weight: 700;">$199</span>

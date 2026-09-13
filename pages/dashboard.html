@@ -81,7 +81,9 @@
             <h2>Welcome back, <span id="overviewUserName">Developer</span></h2>
             <p style="font-size: 0.9rem; margin-top: 0.25rem;">Monitor your AI Agent SEO engine usage and active projects.</p>
           </div>
-          <a href="/pricing.html" class="btn btn-primary btn-sm">Upgrade Plan</a>
+          <div id="overviewUpgradeContainer">
+            <a href="/pricing.html" id="overviewUpgradeBtn" class="btn btn-primary btn-sm">Upgrade Plan</a>
+          </div>
         </div>
 
         <!-- Usage Cards Grid -->
@@ -119,10 +121,13 @@
         <div class="card">
           <h4>Your MCP Connection URL</h4>
           <p style="font-size: 0.85rem; margin: 0.4rem 0 1rem 0;">Add this URL to your IDE configuration file to give your agent full access to all 8 SEO tools.</p>
-          <div style="display: flex; gap: 0.5rem;">
-            <input type="text" id="overviewMcpUrl" class="form-control" readonly value="https://mcp.rankforge.app/mcp?token=USER_JWT_TOKEN">
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
+            <input type="text" id="overviewMcpUrl" class="form-control" readonly value="https://rankforge-mcp.workers.dev/mcp" aria-label="MCP Connection URL">
             <button class="btn btn-secondary" data-copy-target="overviewMcpUrl">Copy</button>
           </div>
+          <p style="font-size: 0.78rem; color: var(--text-muted);">
+            Endpoint: <code style="color: var(--accent-blue);">https://rankforge-mcp.workers.dev/mcp</code> &bull; Custom Domain: <code>https://mcp.rankforge.app/mcp</code>
+          </p>
         </div>
       </section>
 
@@ -159,11 +164,17 @@
         <!-- MCP Server URL Display -->
         <div class="card" style="margin-bottom: 2rem;">
           <h4>MCP Server URL</h4>
-          <p style="font-size: 0.85rem; margin: 0.4rem 0 1rem 0;">This URL contains your authenticated token parameter for simple one-line agent integration:</p>
+          <p style="font-size: 0.85rem; margin: 0.4rem 0 1rem 0;">Direct Cloudflare Worker MCP Endpoint:</p>
           
-          <div style="display: flex; gap: 0.5rem; max-width: 700px; margin-bottom: 1.5rem;">
-            <input type="text" id="mcpUrlDisplay" class="form-control" readonly value="https://mcp.rankforge.app/mcp?token=USER_JWT_TOKEN">
+          <div style="display: flex; gap: 0.5rem; max-width: 700px; margin-bottom: 1rem;">
+            <input type="text" id="mcpUrlDisplay" class="form-control" readonly value="https://rankforge-mcp.workers.dev/mcp" aria-label="MCP Server URL">
             <button class="btn btn-secondary" data-copy-target="mcpUrlDisplay">Copy</button>
+          </div>
+
+          <h5 style="margin-top: 1rem; margin-bottom: 0.4rem; font-size: 0.88rem;">Authenticated Query Parameter URL (for simple IDEs / Codex):</h5>
+          <div style="display: flex; gap: 0.5rem; max-width: 700px; margin-bottom: 1.5rem;">
+            <input type="text" id="mcpTokenUrlDisplay" class="form-control" readonly value="https://rankforge-mcp.workers.dev/mcp?token=USER_JWT_TOKEN" aria-label="Authenticated MCP Token URL">
+            <button class="btn btn-secondary" data-copy-target="mcpTokenUrlDisplay">Copy</button>
           </div>
 
           <!-- Quick Setup Instructions per IDE -->
@@ -219,7 +230,7 @@
                 <th>Score</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="usageTableBody">
               <tr>
                 <td>Today, 14:22</td>
                 <td>acmedental.com</td>

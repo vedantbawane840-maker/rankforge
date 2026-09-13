@@ -13,7 +13,8 @@ import {
   GoogleAuthProvider,
   GithubAuthProvider,
   signOut,
-  getIdToken
+  getIdToken,
+  sendPasswordResetEmail
 } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
 import {
@@ -95,6 +96,11 @@ export async function signupWithEmail(email, password) {
   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
   await ensureUserDocument(userCredential.user);
   return userCredential.user;
+}
+
+export async function resetPassword(email) {
+  if (!auth) throw new Error("Firebase auth not configured.");
+  return await sendPasswordResetEmail(auth, email);
 }
 
 export async function loginWithGoogle() {

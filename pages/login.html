@@ -24,61 +24,70 @@
     <!-- Auth Card -->
     <div class="card" style="padding: 2rem;">
       
-      <!-- OAuth Providers -->
-      <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
-        <button id="googleLoginBtn" class="btn btn-secondary btn-block">
-          <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.836.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
-          <span>Continue with Google</span>
-        </button>
-
-        <button id="githubLoginBtn" class="btn btn-secondary btn-block">
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-          <span>Continue with GitHub</span>
-        </button>
+      <!-- Initial Loading Auth State -->
+      <div id="authLoadingState" style="text-align: center; padding: 2rem 0;">
+        <svg style="display:inline-block; width:24px; height:24px; animation: spin 1s linear infinite; color: var(--accent-blue);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="0.9"/></svg>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem;">Connecting secure authentication...</p>
       </div>
 
-      <!-- Divider -->
-      <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-        <div style="flex: 1; height: 1px; background-color: var(--border-color);"></div>
-        <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">or email</span>
-        <div style="flex: 1; height: 1px; background-color: var(--border-color);"></div>
-      </div>
+      <div id="authControls" style="display: none;">
+        <!-- OAuth Providers -->
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem;">
+          <button id="googleLoginBtn" class="btn btn-secondary btn-block">
+            <svg width="16" height="16" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.616z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.836.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+            <span>Continue with Google</span>
+          </button>
 
-      <!-- Alert Box -->
-      <div id="authAlert" style="display: none; padding: 0.65rem 0.85rem; border-radius: var(--radius-md); margin-bottom: 1rem; font-size: 0.82rem; background-color: var(--color-danger-subtle); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5;"></div>
-
-      <!-- Email / Password Form -->
-      <form id="emailAuthForm">
-        <div class="form-group">
-          <label class="form-label" for="emailInput">Work Email</label>
-          <input type="email" id="emailInput" class="form-control" placeholder="developer@company.com" required autocomplete="email">
+          <button id="githubLoginBtn" class="btn btn-secondary btn-block">
+            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+            <span>Continue with GitHub</span>
+          </button>
         </div>
 
-        <div class="form-group">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-            <label class="form-label" for="passwordInput" style="margin-bottom: 0;">Password</label>
+        <!-- Divider -->
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div style="flex: 1; height: 1px; background-color: var(--border-color);"></div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">or email</span>
+          <div style="flex: 1; height: 1px; background-color: var(--border-color);"></div>
+        </div>
+
+        <!-- Alert Box -->
+        <div id="authAlert" style="display: none; padding: 0.65rem 0.85rem; border-radius: var(--radius-md); margin-bottom: 1rem; font-size: 0.82rem; background-color: var(--color-danger-subtle); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5;"></div>
+
+        <!-- Email / Password Form -->
+        <form id="emailAuthForm">
+          <div class="form-group">
+            <label class="form-label" for="emailInput">Work Email</label>
+            <input type="email" id="emailInput" class="form-control" placeholder="developer@company.com" required autocomplete="email">
           </div>
-          <input type="password" id="passwordInput" class="form-control" placeholder="••••••••••••" required minlength="8" autocomplete="current-password">
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <label class="form-label" for="passwordInput" style="margin-bottom: 0;">Password</label>
+              <button type="button" id="forgotPasswordBtn" style="background: transparent; border: none; font-size: 0.78rem; color: var(--accent-blue); cursor: pointer; padding: 0;">Forgot password?</button>
+            </div>
+            <input type="password" id="passwordInput" class="form-control" placeholder="••••••••••••" required minlength="8" autocomplete="current-password">
+          </div>
+
+          <button type="submit" id="submitAuthBtn" class="btn btn-primary btn-block" style="margin-top: 0.5rem;">
+            Sign In
+          </button>
+        </form>
+
+        <!-- Toggle Sign in / Sign up -->
+        <div style="text-align: center; margin-top: 1.25rem; font-size: 0.85rem; color: var(--text-secondary);">
+          <span id="authToggleText">Don't have an account?</span>
+          <button id="authToggleBtn" style="background: transparent; border: none; color: var(--accent-blue); font-weight: 500; cursor: pointer; margin-left: 0.25rem;">
+            Sign up
+          </button>
         </div>
 
-        <button type="submit" id="submitAuthBtn" class="btn btn-primary btn-block" style="margin-top: 0.5rem;">
-          Sign In
-        </button>
-      </form>
-
-      <!-- Toggle Sign in / Sign up -->
-      <div style="text-align: center; margin-top: 1.25rem; font-size: 0.85rem; color: var(--text-secondary);">
-        <span id="authToggleText">Don't have an account?</span>
-        <button id="authToggleBtn" style="background: transparent; border: none; color: var(--accent-blue); font-weight: 500; cursor: pointer; margin-left: 0.25rem;">
-          Sign up
-        </button>
-      </div>
-
-      <!-- Sandbox Developer Bypass -->
-      <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); text-align: center;">
-        <a href="/dashboard.html?demo=true" style="font-size: 0.8rem; color: var(--text-muted);">
-          &rarr; Explore Interactive Sandbox Dashboard
-        </a>
+        <!-- Sandbox Developer Bypass -->
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color); text-align: center;">
+          <a href="/dashboard.html?demo=true" style="font-size: 0.8rem; color: var(--text-muted);">
+            &rarr; Explore Interactive Sandbox Dashboard
+          </a>
+        </div>
       </div>
 
     </div>
@@ -90,7 +99,13 @@
   </div>
 
   <script type="module">
-    import { loginWithEmail, signupWithEmail, loginWithGoogle, loginWithGitHub } from '/assets/js/auth.js';
+    import { loginWithEmail, signupWithEmail, loginWithGoogle, loginWithGitHub, resetPassword } from '/assets/js/auth.js';
+
+    // Reveal auth controls once Firebase Auth module has loaded
+    const loadingState = document.getElementById('authLoadingState');
+    const authControls = document.getElementById('authControls');
+    if (loadingState) loadingState.style.display = 'none';
+    if (authControls) authControls.style.display = 'block';
 
     let isSignUpMode = false;
 
@@ -101,6 +116,7 @@
     const toggleBtn = document.getElementById('authToggleBtn');
     const toggleText = document.getElementById('authToggleText');
     const alertBox = document.getElementById('authAlert');
+    const forgotBtn = document.getElementById('forgotPasswordBtn');
 
     toggleBtn.addEventListener('click', () => {
       isSignUpMode = !isSignUpMode;
@@ -108,12 +124,34 @@
         submitBtn.textContent = 'Create Account';
         toggleText.textContent = 'Already have an account?';
         toggleBtn.textContent = 'Sign in';
+        if (forgotBtn) forgotBtn.style.display = 'none';
       } else {
         submitBtn.textContent = 'Sign In';
         toggleText.textContent = "Don't have an account?";
         toggleBtn.textContent = 'Sign up';
+        if (forgotBtn) forgotBtn.style.display = 'inline';
       }
     });
+
+    if (forgotBtn) {
+      forgotBtn.addEventListener('click', async () => {
+        const email = document.getElementById('emailInput').value.trim();
+        if (!email) {
+          showError('Please enter your work email first to receive a password reset link.');
+          return;
+        }
+        try {
+          await resetPassword(email);
+          alertBox.textContent = 'Password reset link sent! Please check your email inbox.';
+          alertBox.style.display = 'block';
+          alertBox.style.backgroundColor = 'var(--color-success-subtle)';
+          alertBox.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+          alertBox.style.color = '#6ee7b7';
+        } catch (err) {
+          showError(getFriendlyErrorMessage(err));
+        }
+      });
+    }
 
     function showError(msg) {
       alertBox.textContent = msg;

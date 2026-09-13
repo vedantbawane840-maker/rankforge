@@ -78,12 +78,12 @@
         <div class="code-box">
           <div class="code-box-header">
             <span>.cursor/mcp.json</span>
-            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeCursor').textContent); alert('Copied Cursor config!');">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeCursor" aria-label="Copy Cursor MCP configuration">Copy</button>
           </div>
           <pre id="codeCursor"><code>{
   "mcpServers": {
     "rankforge": {
-      "url": "https://mcp.rankforge.app/mcp",
+      "url": "https://rankforge-mcp.workers.dev/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_JWT_TOKEN"
       }
@@ -96,16 +96,24 @@
       <!-- 2. Claude Code Setup -->
       <div class="card" style="margin-bottom: 2rem;" id="guideClaude">
         <h3>2. Claude Code</h3>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>claude_desktop_config.json</code> or register via terminal command:</p>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Option A: Add directly via the Claude Code CLI in your terminal:</p>
+        <div class="code-box" style="margin-bottom: 1rem;">
+          <div class="code-box-header">
+            <span>Claude Code CLI Command</span>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeClaudeCli" aria-label="Copy Claude Code CLI command">Copy</button>
+          </div>
+          <pre id="codeClaudeCli"><code>claude mcp add --transport http rankforge https://rankforge-mcp.workers.dev/mcp --header "Authorization: Bearer YOUR_JWT_TOKEN"</code></pre>
+        </div>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Option B: Or add to your <code>claude_desktop_config.json</code> or project MCP config:</p>
         <div class="code-box">
           <div class="code-box-header">
             <span>claude_desktop_config.json</span>
-            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeClaude').textContent); alert('Copied Claude config!');">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeClaude" aria-label="Copy Claude desktop configuration">Copy</button>
           </div>
           <pre id="codeClaude"><code>{
   "mcpServers": {
     "rankforge": {
-      "url": "https://mcp.rankforge.app/mcp",
+      "url": "https://rankforge-mcp.workers.dev/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_JWT_TOKEN"
       }
@@ -122,12 +130,12 @@
         <div class="code-box">
           <div class="code-box-header">
             <span>mcp_config.json</span>
-            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeWindsurf').textContent); alert('Copied Windsurf config!');">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeWindsurf" aria-label="Copy Windsurf configuration">Copy</button>
           </div>
           <pre id="codeWindsurf"><code>{
   "mcpServers": {
     "rankforge": {
-      "url": "https://mcp.rankforge.app/mcp",
+      "serverUrl": "https://rankforge-mcp.workers.dev/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_JWT_TOKEN"
       }
@@ -140,21 +148,30 @@
       <!-- 4. Cline Setup -->
       <div class="card" style="margin-bottom: 2rem;" id="guideCline">
         <h3>4. Cline</h3>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>settings.json</code> (or Cline MCP settings):</p>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>cline_mcp_settings.json</code> (or Cline Settings &rarr; MCP Servers):</p>
         <div class="code-box">
           <div class="code-box-header">
-            <span>settings.json</span>
-            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeCline').textContent); alert('Copied Cline config!');">Copy</button>
+            <span>cline_mcp_settings.json</span>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeCline" aria-label="Copy Cline configuration">Copy</button>
           </div>
           <pre id="codeCline"><code>{
   "mcpServers": {
     "rankforge": {
-      "url": "https://mcp.rankforge.app/mcp",
+      "url": "https://rankforge-mcp.workers.dev/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_JWT_TOKEN"
       },
       "disabled": false,
-      "autoApprove": ["seo_audit", "keyword_research", "competitor_analysis", "generate_report"]
+      "autoApprove": [
+        "seo_audit",
+        "keyword_research",
+        "competitor_analysis",
+        "backlink_audit",
+        "local_seo",
+        "aeo_geo_audit",
+        "technical_seo",
+        "generate_report"
+      ]
     }
   }
 }</code></pre>
@@ -168,7 +185,7 @@
         <div class="code-box">
           <div class="code-box-header">
             <span>config.json</span>
-            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeContinue').textContent); alert('Copied Continue.dev config!');">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeContinue" aria-label="Copy Continue.dev configuration">Copy</button>
           </div>
           <pre id="codeContinue"><code>{
   "experimental": {
@@ -176,7 +193,7 @@
       {
         "transport": {
           "type": "sse",
-          "url": "https://mcp.rankforge.app/mcp",
+          "url": "https://rankforge-mcp.workers.dev/mcp",
           "requestOptions": {
             "headers": {
               "Authorization": "Bearer YOUR_JWT_TOKEN"
@@ -197,12 +214,12 @@
         <div class="code-box">
           <div class="code-box-header">
             <span>settings.json</span>
-            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeZed').textContent); alert('Copied Zed config!');">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeZed" aria-label="Copy Zed configuration">Copy</button>
           </div>
           <pre id="codeZed"><code>{
   "context_servers": {
     "rankforge": {
-      "url": "https://mcp.rankforge.app/mcp",
+      "url": "https://rankforge-mcp.workers.dev/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_JWT_TOKEN"
       }
@@ -219,12 +236,12 @@
         <div class="code-box">
           <div class="code-box-header">
             <span>Custom GPT Action Setup</span>
-            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeCodex').textContent); alert('Copied Codex instructions!');">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeCodex" aria-label="Copy OpenAI Codex configuration">Copy</button>
           </div>
           <pre id="codeCodex"><code>1. Navigate to your Custom GPT -> Configure -> Actions -> Create new action.
 2. In the Authentication settings, choose "API Key" -> Type "Bearer".
 3. Enter your Personal RankForge Token.
-4. Schema URL: https://mcp.rankforge.app/mcp/tools
+4. Schema URL: https://rankforge-mcp.workers.dev/mcp/tools
 5. Your custom GPT can now invoke all 8 SEO & AEO tools automatically!</code></pre>
         </div>
       </div>
@@ -241,6 +258,43 @@
       </div>
     </div>
   </footer>
+
+  <!-- Non-blocking accessible copy handler -->
+  <script>
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const targetId = btn.getAttribute('data-target');
+        const el = document.getElementById(targetId);
+        if (!el) return;
+        const text = el.textContent.trim();
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(text);
+          } else {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+          }
+          const originalText = btn.textContent;
+          btn.textContent = 'Copied! ✓';
+          btn.style.color = 'var(--color-success)';
+          btn.style.borderColor = 'var(--color-success)';
+          setTimeout(() => {
+            btn.textContent = originalText;
+            btn.style.color = '';
+            btn.style.borderColor = '';
+          }, 2000);
+        } catch (err) {
+          console.warn('Clipboard write failed:', err);
+        }
+      });
+    });
+  </script>
 
 </body>
 </html>

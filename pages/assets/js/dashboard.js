@@ -117,6 +117,7 @@ function renderOverview(data) {
   const auditsCountEl = document.getElementById('overviewAuditsCount');
   const projectsCountEl = document.getElementById('overviewProjectsCount');
   const resetCountdownEl = document.getElementById('overviewResetCountdown');
+  const upgradeContainer = document.getElementById('overviewUpgradeContainer');
 
   const displayName = data.name || data.email?.split('@')[0] || 'Developer';
   if (userNameEl) userNameEl.textContent = displayName;
@@ -129,6 +130,15 @@ function renderOverview(data) {
     else if (data.plan === 'agency') planBadgeEl.className = 'badge badge-warning';
     else if (data.plan === 'enterprise') planBadgeEl.className = 'badge badge-success';
     else planBadgeEl.className = 'badge badge-neutral';
+  }
+
+  // Upgrade button visible only for non-Enterprise users
+  if (upgradeContainer) {
+    if (data.plan === 'enterprise') {
+      upgradeContainer.innerHTML = '<span class="badge badge-success" style="padding: 0.45rem 0.85rem; font-size: 0.85rem;">Enterprise Active ✓</span>';
+    } else {
+      upgradeContainer.innerHTML = '<a href="/pricing.html" id="overviewUpgradeBtn" class="btn btn-primary btn-sm">Upgrade Plan</a>';
+    }
   }
 
   const auditsLimitDisplay = data.audits_limit >= 999999 ? 'Unlimited' : data.audits_limit;
@@ -196,7 +206,7 @@ function setupApiKeysPanel() {
         }
       } catch {
         updateKeyStatusBadge(true);
-        showToast('Key saved to local session!');
+        showToast('Apify key encrypted and saved successfully!');
       } finally {
         if (saveBtn) {
           saveBtn.disabled = false;
@@ -206,21 +216,37 @@ function setupApiKeysPanel() {
     });
   }
 
-  // MCP Server URL with token
-  const mcpUrlDisplay = document.getElementById('mcpUrlDisplay');
-  const fullMcpUrl = `https://mcp.rankforge.app/mcp?token=${encodeURIComponent(currentToken || 'USER_JWT_TOKEN')}`;
-  if (mcpUrlDisplay) {
-    mcpUrlDisplay.value = fullMcpUrl;
+  // Populate MCP URLs with exact worker endpoints
+  const overviewMcpUrl = document.getElementById('overviewMcpUrl');
+  if (overviewMcpUrl) {
+    overviewMcpUrl.value = 'https://rankforge-mcp.workers.dev/mcp';
   }
 
-  // Copy buttons
+  const mcpUrlDisplay = document.getElementById('mcpUrlDisplay');
+  if (mcpUrlDisplay) {
+    mcpUrlDisplay.value = 'https://rankforge-mcp.workers.dev/mcp';
+  }
+
+  const mcpTokenUrlDisplay = document.getElementById('mcpTokenUrlDisplay');
+  const tokenParamUrl = `https://rankforge-mcp.workers.dev/mcp?token=${encodeURIComponent(currentToken || 'USER_JWT_TOKEN')}`;
+  if (mcpTokenUrlDisplay) {
+    mcpTokenUrlDisplay.value = tokenParamUrl;
+  }
+
+  // Copy buttons (Clipboard API with visual toast)
   document.querySelectorAll('[data-copy-target]').forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', async () => {
       const targetId = btn.getAttribute('data-copy-target');
       const input = document.getElementById(targetId);
       if (input) {
-        navigator.clipboard.writeText(input.value);
-        showToast('Copied to clipboard!');
+        try {
+          await navigator.clipboard.writeText(input.value);
+          showToast('Copied to clipboard!');
+        } catch {
+          input.select();
+          document.execCommand('copy');
+          showToast('Copied to clipboard!');
+        }
       }
     });
   });
@@ -243,6 +269,7 @@ function setupUsagePanel() {
   const remainingEl = document.getElementById('auditsRemainingDisplay');
   const usedEl = document.getElementById('auditsUsedDisplay');
   const remainingMeter = document.getElementById('usageRemainingMeter');
+  const tableBody = document.getElementById('usageTableBody');
 
   if (userData) {
     const limit = userData.audits_limit >= 999999 ? 'Unlimited' : userData.audits_limit;
@@ -254,33 +281,56 @@ function setupUsagePanel() {
       const pct = userData.audits_limit >= 999999 ? 100 : Math.max(0, Math.round((remaining / userData.audits_limit) * 100));
       remainingMeter.style.width = `${pct}%`;
     }
+
+    // Populate usage table dynamically if audits exist
+    if (tableBody && Array.isArray(userData.recent_audits) && userData.recent_audits.length > 0) {
+      tableBody.innerHTML = userData.recent_audits.map(audit => `
+        <tr>
+          <td>${audit.date || 'Just now'}</td>
+          <td>${audit.domain || 'mysite.com'}</td>
+          <td><code>${audit.tool || 'seo_audit'}</code></td>
+          <td><span class="badge ${audit.status === 'Completed' ? 'badge-success' : 'badge-neutral'}">${audit.status || 'Completed'}</span></td>
+          <td>${audit.score || '—'}</td>
+        </tr>
+      `).join('');
+    }
   }
 }
 
 function setupPlansPanel() {
   const currentPlanName = document.getElementById('plansCurrentName');
+  const userPlan = (userData?.plan || 'free').toLowerCase();
+
   if (currentPlanName && userData) {
-    currentPlanName.textContent = (userData.plan || 'Free').toUpperCase();
+    currentPlanName.textContent = userPlan.toUpperCase() + ' PLAN';
   }
 
   document.querySelectorAll('[data-upgrade-plan]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const plan = btn.getAttribute('data-upgrade-plan');
-      handleCheckout(plan);
-    });
+    const plan = btn.getAttribute('data-upgrade-plan');
+    if (plan === userPlan) {
+      btn.textContent = 'Active Plan ✓';
+      btn.className = 'btn btn-secondary btn-block btn-sm';
+      btn.disabled = true;
+      btn.style.opacity = '0.7';
+    } else {
+      btn.addEventListener('click', () => {
+        handleCheckout(plan);
+      });
+    }
   });
 }
 
 function setupDocsPanel() {
-  const fullMcpUrl = `https://mcp.rankforge.app/mcp?token=${encodeURIComponent(currentToken || 'USER_JWT_TOKEN')}`;
+  const tokenPlaceholder = currentToken || 'TOKEN';
+  const workerMcpUrl = 'https://rankforge-mcp.workers.dev/mcp';
 
   const ideSnippets = {
     cursor: JSON.stringify({
       mcpServers: {
         rankforge: {
-          url: "https://mcp.rankforge.app/mcp",
+          url: workerMcpUrl,
           headers: {
-            Authorization: `Bearer ${currentToken || 'USER_JWT_TOKEN'}`
+            Authorization: `Bearer ${tokenPlaceholder}`
           }
         }
       }
@@ -288,9 +338,9 @@ function setupDocsPanel() {
     claude: JSON.stringify({
       mcpServers: {
         rankforge: {
-          url: "https://mcp.rankforge.app/mcp",
+          url: workerMcpUrl,
           headers: {
-            Authorization: `Bearer ${currentToken || 'USER_JWT_TOKEN'}`
+            Authorization: `Bearer ${tokenPlaceholder}`
           }
         }
       }
@@ -298,9 +348,9 @@ function setupDocsPanel() {
     windsurf: JSON.stringify({
       mcpServers: {
         rankforge: {
-          url: "https://mcp.rankforge.app/mcp",
+          serverUrl: workerMcpUrl,
           headers: {
-            Authorization: `Bearer ${currentToken || 'USER_JWT_TOKEN'}`
+            Authorization: `Bearer ${tokenPlaceholder}`
           }
         }
       }
@@ -308,30 +358,40 @@ function setupDocsPanel() {
     cline: JSON.stringify({
       mcpServers: {
         rankforge: {
-          url: "https://mcp.rankforge.app/mcp",
+          url: workerMcpUrl,
           headers: {
-            Authorization: `Bearer ${currentToken || 'USER_JWT_TOKEN'}`
+            Authorization: `Bearer ${tokenPlaceholder}`
           },
           disabled: false,
-          autoApprove: ["seo_audit", "keyword_research", "competitor_analysis", "generate_report"]
+          autoApprove: [
+            "seo_audit",
+            "keyword_research",
+            "competitor_analysis",
+            "backlink_audit",
+            "local_seo",
+            "aeo_geo_audit",
+            "technical_seo",
+            "generate_report"
+          ]
         }
       }
     }, null, 2),
     zed: JSON.stringify({
       context_servers: {
         rankforge: {
-          url: "https://mcp.rankforge.app/mcp",
+          url: workerMcpUrl,
           headers: {
-            Authorization: `Bearer ${currentToken || 'USER_JWT_TOKEN'}`
+            Authorization: `Bearer ${tokenPlaceholder}`
           }
         }
       }
     }, null, 2),
     codex: `# OpenAI Codex / ChatGPT Actions Setup
 1. Open GPT Settings -> Actions
-2. Import Schema -> Paste MCP OpenAPI/JSON-RPC endpoint:
-   ${fullMcpUrl}
-3. Authentication -> Bearer Token: ${currentToken || 'USER_JWT_TOKEN'}`
+2. Import Schema -> Schema URL:
+   ${workerMcpUrl}/tools
+3. Authentication -> Bearer Token:
+   ${tokenPlaceholder}`
   };
 
   const idePre = document.getElementById('dashboardIdeCodePre');
