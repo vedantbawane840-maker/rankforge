@@ -1,19 +1,36 @@
 /**
  * Cloudflare Pages Function: POST /api/checkout
  * Creates a Dodo Payments subscription checkout session
+ * 
+ * Supports monthly and annual billing intervals with real Dodo product IDs.
+ * Live URL: https://live.dodopayments.com
  */
 
+// Real Dodo Product ID mapping
+const PRODUCT_IDS = {
+  pro: {
+    monthly: 'pdt_0NnVqvYKl7HE2QTH62MUF',
+    annual: 'pdt_0NnVr2i7mTMWbfuOq6O2v'
+  },
+  agency: {
+    monthly: 'pdt_0NnVqxqTM0vZWwz9YyeWN',
+    annual: 'pdt_0NnVr4cqJbCV7CQaRim52'
+  },
+  enterprise: {
+    monthly: 'pdt_0NnVr0MTe39CIYMf9ormf',
+    annual: 'pdt_0NnVr6msV9c2vfvJ5D8cA'
+  }
+};
+
 export async function onRequestPost(context) {
+  // ── 1. Auth ──────────────────────────────────────────────
   const authHeader = context.request.headers.get('Authorization');
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return new Response(JSON.stringify({ error: 'Unauthorized: Missing or invalid token' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return jsonResponse({ error: 'Unauthorized: Missing or invalid token' }, 401);
   }
 
   const token = authHeader.substring(7).trim();
-  let uid = 'sandbox_user';
+  let uid = 'unknown_user';
   let email = 'developer@rankforge.app';
   let name = 'RankForge Developer';
 
@@ -31,123 +48,156 @@ export async function onRequestPost(context) {
       }
     }
   } catch {
-    // Non-blocking fallback
+    // Non-blocking fallback — UID extraction is best-effort
   }
 
+  // ── 2. Parse Body ────────────────────────────────────────
   let body;
   try {
     body = await context.request.json();
   } catch {
-    return new Response(JSON.stringify({ error: 'Malformed JSON body' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return jsonResponse({ error: 'Malformed JSON body' }, 400);
   }
 
   const plan = body.plan;
+  const interval = body.interval || 'monthly'; // 'monthly' | 'annual'
   const returnUrl = body.return_url || 'https://rankforge.app/dashboard.html?upgrade=success';
 
   if (!plan || !['pro', 'agency', 'enterprise'].includes(plan)) {
-    return new Response(JSON.stringify({ error: 'Invalid plan selected' }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return jsonResponse({ error: 'Invalid plan. Must be: pro, agency, or enterprise' }, 400);
   }
 
+  if (!['monthly', 'annual'].includes(interval)) {
+    return jsonResponse({ error: 'Invalid interval. Must be: monthly or annual' }, 400);
+  }
+
+  // ── 3. Resolve Product ID ────────────────────────────────
+  // Priority: env var override > hardcoded map
+  const envKey = `DODO_PRICE_${plan.toUpperCase()}_${interval.toUpperCase()}`;
+  const productId = context.env?.[envKey] || PRODUCT_IDS[plan]?.[interval];
+
+  if (!productId) {
+    return jsonResponse({ error: 'Product configuration missing for this plan/interval' }, 500);
+  }
+
+  // ── 4. Build return URL with metadata ────────────────────
+  const fullReturnUrl = appendParams(returnUrl, { plan, interval });
+
+  // ── 5. Dodo API Key ──────────────────────────────────────
   const dodoApiKey = context.env?.DODO_API_KEY;
-  const priceMap = {
-    pro: context.env?.DODO_PRICE_PRO || 'price_pro_monthly',
-    agency: context.env?.DODO_PRICE_AGENCY || 'price_agency_monthly',
-    enterprise: context.env?.DODO_PRICE_ENTERPRISE || 'price_enterprise_monthly'
-  };
+  const baseUrl = context.env?.DODO_BASE_URL || 'https://live.dodopayments.com';
 
-  const selectedPriceId = priceMap[plan];
-
-  // Append plan parameter to returnUrl if not already present
-  const fullReturnUrl = returnUrl.includes('plan=')
-    ? returnUrl
-    : `${returnUrl}${returnUrl.includes('?') ? '&' : '?'}plan=${plan}`;
-
-  // If Dodo API Key is configured, make live/test Dodo API call
-  if (dodoApiKey) {
-    const isTestMode = dodoApiKey.includes('test') || context.env?.DODO_ENV === 'test';
-    const baseUrl = isTestMode ? 'https://test.dodopayments.com' : 'https://api.dodopayments.com';
-
-    try {
-      // 1. Try Dodo Checkout Sessions API v2
-      const checkoutRes = await fetch(`${baseUrl}/checkout_sessions`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${dodoApiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          product_cart: [
-            {
-              product_id: selectedPriceId,
-              quantity: 1
-            }
-          ],
-          return_url: fullReturnUrl,
-          customer: {
-            email,
-            name
-          },
-          metadata: {
-            uid,
-            plan
-          }
-        })
-      });
-
-      if (checkoutRes.ok) {
-        const checkoutData = await checkoutRes.json();
-        const url = checkoutData.checkout_url || checkoutData.payment_link || checkoutData.url;
-        if (url) {
-          return new Response(JSON.stringify({ checkout_url: url }), {
-            headers: { 'Content-Type': 'application/json' }
-          });
-        }
-      }
-
-      // 2. Fallback to Dodo Subscriptions API v1
-      const subRes = await fetch(`${baseUrl}/subscriptions`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${dodoApiKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          product_id: selectedPriceId,
-          quantity: 1,
-          payment_link: true,
-          return_url: fullReturnUrl,
-          customer: { email, name },
-          metadata: {
-            uid,
-            plan
-          }
-        })
-      });
-
-      if (subRes.ok) {
-        const subData = await subRes.json();
-        const url = subData.payment_link || subData.checkout_url || subData.url;
-        if (url) {
-          return new Response(JSON.stringify({ checkout_url: url }), {
-            headers: { 'Content-Type': 'application/json' }
-          });
-        }
-      }
-    } catch (err) {
-      console.error('Dodo Payments API error:', err);
-    }
+  if (!dodoApiKey) {
+    return jsonResponse({ error: 'Payment gateway not configured. Contact support.' }, 503);
   }
 
-  // High-reliability hosted checkout link fallback
-  const testCheckoutUrl = `https://test.dodopayments.com/buy/${selectedPriceId}?quantity=1&return_url=${encodeURIComponent(fullReturnUrl)}&customer_email=${encodeURIComponent(email)}&metadata_uid=${encodeURIComponent(uid)}&metadata_plan=${encodeURIComponent(plan)}`;
+  // ── 6. Create Checkout Session via Dodo API ──────────────
+  try {
+    const checkoutPayload = {
+      product_cart: [
+        {
+          product_id: productId,
+          quantity: 1
+        }
+      ],
+      payment_link: true,
+      return_url: fullReturnUrl,
+      customer: {
+        email,
+        name
+      },
+      metadata: {
+        uid,
+        plan,
+        interval,
+        source: 'rankforge_checkout'
+      }
+    };
 
-  return new Response(JSON.stringify({ checkout_url: testCheckoutUrl }), {
-    headers: { 'Content-Type': 'application/json' }
+    const checkoutRes = await fetch(`${baseUrl}/checkout_sessions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${dodoApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(checkoutPayload)
+    });
+
+    if (checkoutRes.ok) {
+      const data = await checkoutRes.json();
+      const url = data.checkout_url || data.payment_link || data.url;
+      if (url) {
+        return jsonResponse({
+          checkout_url: url,
+          session_id: data.checkout_session_id || data.id,
+          product_id: productId,
+          plan,
+          interval
+        });
+      }
+    }
+
+    // If checkout_sessions fails, try the subscriptions endpoint (fallback)
+    const subRes = await fetch(`${baseUrl}/subscriptions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${dodoApiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        product_id: productId,
+        quantity: 1,
+        payment_link: true,
+        return_url: fullReturnUrl,
+        customer: { email, name },
+        metadata: { uid, plan, interval }
+      })
+    });
+
+    if (subRes.ok) {
+      const subData = await subRes.json();
+      const url = subData.payment_link || subData.checkout_url || subData.url;
+      if (url) {
+        return jsonResponse({
+          checkout_url: url,
+          subscription_id: subData.subscription_id || subData.id,
+          product_id: productId,
+          plan,
+          interval
+        });
+      }
+    }
+
+    // Both endpoints failed — return error with details
+    const errText = await checkoutRes.text().catch(() => 'Unknown error');
+    console.error('Dodo Payments API error:', errText);
+    return jsonResponse({
+      error: 'Failed to create checkout session',
+      details: errText
+    }, 502);
+
+  } catch (err) {
+    console.error('Dodo Payments network error:', err);
+    return jsonResponse({ error: 'Payment service unavailable. Please try again.' }, 503);
+  }
+}
+
+// ── Helpers ────────────────────────────────────────────────────
+
+function jsonResponse(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    }
   });
+}
+
+function appendParams(url, params) {
+  const separator = url.includes('?') ? '&' : '?';
+  const qs = Object.entries(params)
+    .map(([k, v]) => `${k}=${encodeURIComponent(v)}`)
+    .join('&');
+  return `${url}${separator}${qs}`;
 }

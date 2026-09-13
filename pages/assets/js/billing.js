@@ -1,9 +1,17 @@
 /**
  * RankForge Billing Module - Dodo Payments Integration
  * Handles plan checkout sessions via Cloudflare Pages API
+ * Supports monthly/annual billing interval toggle
  */
 
 import { getUserAuthToken } from './auth.js';
+
+// ── Product ID Map (mirrors backend, used only for fallback URLs) ──
+const PRODUCT_IDS = {
+  pro:        { monthly: 'pdt_0NnVqvYKl7HE2QTH62MUF', annual: 'pdt_0NnVr2i7mTMWbfuOq6O2v' },
+  agency:     { monthly: 'pdt_0NnVqxqTM0vZWwz9YyeWN', annual: 'pdt_0NnVr4cqJbCV7CQaRim52' },
+  enterprise: { monthly: 'pdt_0NnVr0MTe39CIYMf9ormf', annual: 'pdt_0NnVr6msV9c2vfvJ5D8cA' }
+};
 
 export const PRICING_PLANS = {
   free: {
@@ -35,6 +43,9 @@ export const PRICING_PLANS = {
   }
 };
 
+// Track current billing interval globally
+let currentInterval = 'monthly';
+
 export function initBilling() {
   const toggle = document.getElementById('billingIntervalToggle');
   const pricePro = document.getElementById('pricePro');
@@ -43,16 +54,40 @@ export function initBilling() {
 
   if (toggle) {
     toggle.addEventListener('change', (e) => {
-      const isAnnual = e.target.checked;
-      if (pricePro) pricePro.textContent = isAnnual ? '$24' : '$29';
-      if (priceAgency) priceAgency.textContent = isAnnual ? '$64' : '$79';
-      if (priceEnterprise) priceEnterprise.textContent = isAnnual ? '$159' : '$199';
+      currentInterval = e.target.checked ? 'annual' : 'monthly';
+      if (pricePro) pricePro.textContent = currentInterval === 'annual' ? '$24' : '$29';
+      if (priceAgency) priceAgency.textContent = currentInterval === 'annual' ? '$64' : '$79';
+      if (priceEnterprise) priceEnterprise.textContent = currentInterval === 'annual' ? '$159' : '$199';
+
+      // Update button labels
+      document.querySelectorAll('[data-plan-checkout]').forEach(btn => {
+        const plan = btn.getAttribute('data-plan-checkout');
+        if (plan !== 'free') {
+          const suffix = currentInterval === 'annual' ? '/yr' : '/mo';
+          const price = currentInterval === 'annual'
+            ? PRICING_PLANS[plan]?.priceAnnual
+            : PRICING_PLANS[plan]?.priceMonthly;
+          // Only update if not currently processing
+          if (!btn.disabled) {
+            btn.textContent = `Get ${PRICING_PLANS[plan]?.name || plan}`;
+          }
+        }
+      });
     });
   }
 
+  // Bind checkout buttons
   document.querySelectorAll('[data-plan-checkout]').forEach(button => {
     button.addEventListener('click', (e) => {
       const planKey = e.currentTarget.getAttribute('data-plan-checkout');
+      handleCheckout(planKey);
+    });
+  });
+
+  // Also bind upgrade buttons on dashboard
+  document.querySelectorAll('[data-upgrade-plan]').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const planKey = e.currentTarget.getAttribute('data-upgrade-plan');
       handleCheckout(planKey);
     });
   });
@@ -72,13 +107,12 @@ export async function handleCheckout(planKey) {
 
   if (btn) {
     btn.disabled = true;
-    btn.textContent = 'Creating Checkout Session...';
+    btn.innerHTML = '<span class="spinner-inline"></span> Creating checkout...';
   }
 
   try {
     const token = await getUserAuthToken();
 
-    // Call Cloudflare Pages serverless checkout endpoint
     const response = await fetch('/api/checkout', {
       method: 'POST',
       headers: {
@@ -87,32 +121,67 @@ export async function handleCheckout(planKey) {
       },
       body: JSON.stringify({
         plan: planKey,
+        interval: currentInterval,
         return_url: `${window.location.origin}/dashboard.html?upgrade=success`
       })
     });
 
     if (!response.ok) {
       const errData = await response.json().catch(() => ({}));
-      throw new Error(errData.error || 'Failed to initialize Dodo checkout session');
+      throw new Error(errData.error || 'Failed to create checkout session');
     }
 
     const data = await response.json();
     if (data.checkout_url) {
+      // Redirect to Dodo Payments hosted checkout
       window.location.href = data.checkout_url;
     } else {
-      throw new Error('No checkout URL returned');
+      throw new Error('No checkout URL returned from payment gateway');
     }
   } catch (error) {
-    console.warn('Checkout error or demo redirect:', error);
-    // Fallback sandbox checkout redirect for instant demonstration
-    const fallbackUrl = `https://test.dodopayments.com/buy/p_rankforge_${planKey}?ref=demo&return_url=${encodeURIComponent(window.location.origin + '/dashboard.html?upgrade=success')}`;
-    window.location.href = fallbackUrl;
+    console.error('Checkout error:', error.message);
+
+    // Fallback: Direct Dodo hosted checkout link (live)
+    const productId = PRODUCT_IDS[planKey]?.[currentInterval];
+    if (productId) {
+      const returnUrl = encodeURIComponent(`${window.location.origin}/dashboard.html?upgrade=success&plan=${planKey}&interval=${currentInterval}`);
+      window.location.href = `https://live.dodopayments.com/buy/${productId}?quantity=1&return_url=${returnUrl}`;
+    } else {
+      showCheckoutError(error.message || 'Payment service unavailable. Please try again.');
+    }
   } finally {
     if (btn) {
       btn.disabled = false;
       btn.textContent = originalText;
     }
   }
+}
+
+/**
+ * Shows a toast error message for checkout failures
+ */
+function showCheckoutError(message) {
+  const existing = document.querySelector('.checkout-error-toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'checkout-error-toast';
+  toast.innerHTML = `
+    <div style="display:flex;align-items:center;gap:0.5rem;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>
+      </svg>
+      <span>${message}</span>
+    </div>
+  `;
+  toast.style.cssText = `
+    position:fixed;bottom:2rem;right:2rem;padding:1rem 1.5rem;
+    background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);
+    border-radius:12px;color:#fca5a5;font-size:0.88rem;z-index:9999;
+    backdrop-filter:blur(12px);animation:slideInRight 0.3s ease;
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 5000);
 }
 
 /**
@@ -166,4 +235,3 @@ document.addEventListener('DOMContentLoaded', () => {
     highlightCurrentPlan();
   }
 });
-
