@@ -227,15 +227,24 @@ export class BeyondSeoEngine {
     apifyToken: string | null
   ): Promise<{ success: boolean; data?: T[]; fallback?: boolean; error?: string }> {
     if (!apifyToken) {
-      return { success: false, fallback: true };
+      return {
+        success: false,
+        fallback: true,
+        error: 'Please add your Apify key at rankforge.app/dashboard'
+      };
     }
 
     try {
-      const runUrl = `https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/runs?token=${apifyToken}&waitForFinish=60`;
+      // Pass token via Authorization header instead of URL query parameter for security
+      const runUrl = `https://api.apify.com/v2/acts/${encodeURIComponent(actorId)}/runs?waitForFinish=60`;
       const res = await fetch(runUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(input)
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apifyToken}`
+        },
+        body: JSON.stringify(input),
+        signal: AbortSignal.timeout(65000)
       });
 
       if (!res.ok) {
@@ -248,8 +257,13 @@ export class BeyondSeoEngine {
         return { success: true, data: [] };
       }
 
-      const datasetUrl = `https://api.apify.com/v2/datasets/${datasetId}/items?token=${apifyToken}&limit=50`;
-      const itemsRes = await fetch(datasetUrl);
+      const datasetUrl = `https://api.apify.com/v2/datasets/${datasetId}/items?limit=50`;
+      const itemsRes = await fetch(datasetUrl, {
+        headers: {
+          'Authorization': `Bearer ${apifyToken}`
+        },
+        signal: AbortSignal.timeout(30000)
+      });
       if (!itemsRes.ok) {
         return { success: true, data: [] };
       }
@@ -257,7 +271,12 @@ export class BeyondSeoEngine {
       const items = (await itemsRes.json()) as T[];
       return { success: true, data: items };
     } catch (e: unknown) {
-      return { success: false, fallback: true, error: e instanceof Error ? e.message : 'Apify execution failed' };
+      const msg = e instanceof Error ? e.message : 'Apify execution failed';
+      return {
+        success: false,
+        fallback: true,
+        error: msg.includes('timeout') ? 'Apify actor execution timed out' : msg
+      };
     }
   }
 

@@ -58,7 +58,7 @@
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
             <label class="form-label" for="passwordInput" style="margin-bottom: 0;">Password</label>
           </div>
-          <input type="password" id="passwordInput" class="form-control" placeholder="••••••••••••" required minlength="6" autocomplete="current-password">
+          <input type="password" id="passwordInput" class="form-control" placeholder="••••••••••••" required minlength="8" autocomplete="current-password">
         </div>
 
         <button type="submit" id="submitAuthBtn" class="btn btn-primary btn-block" style="margin-top: 0.5rem;">
@@ -120,36 +120,65 @@
       alertBox.style.display = 'block';
     }
 
+    function getFriendlyErrorMessage(err) {
+      const code = err?.code || '';
+      switch (code) {
+        case 'auth/email-already-in-use':
+          return 'This email is already registered. Please sign in instead.';
+        case 'auth/wrong-password':
+        case 'auth/invalid-credential':
+          return 'Incorrect email or password. Please verify and try again.';
+        case 'auth/user-not-found':
+          return 'No account found with this email. Please sign up first.';
+        case 'auth/popup-blocked':
+          return 'Sign-in popup was blocked by your browser. Please allow popups for this site.';
+        case 'auth/popup-closed-by-user':
+          return 'Sign-in popup was closed before completing authentication.';
+        case 'auth/network-request-failed':
+          return 'Network error: Unable to connect to authentication server. Please check your connection.';
+        case 'auth/weak-password':
+          return 'Password must be at least 8 characters long.';
+        case 'auth/invalid-email':
+          return 'Please enter a valid email address.';
+        default:
+          return err?.message || 'Authentication failed. Please check your credentials.';
+      }
+    }
+
+    const spinnerSvg = `<svg style="display:inline-block; width:14px; height:14px; margin-right:6px; animation: spin 1s linear infinite; vertical-align: middle;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="0.9"/></svg>`;
+
     function setLoading(isLoading, text) {
       submitBtn.disabled = isLoading;
       googleBtn.disabled = isLoading;
       githubBtn.disabled = isLoading;
       if (isLoading && text) {
-        submitBtn.textContent = text;
+        submitBtn.innerHTML = `${spinnerSvg} <span>${text}</span>`;
       } else {
-        submitBtn.textContent = isSignUpMode ? 'Create Account' : 'Sign In';
+        submitBtn.innerHTML = isSignUpMode ? 'Create Account' : 'Sign In';
       }
     }
 
     googleBtn.addEventListener('click', async () => {
+      alertBox.style.display = 'none';
       setLoading(true, 'Connecting Google...');
       try {
         await loginWithGoogle();
         window.location.href = '/dashboard.html';
       } catch (err) {
         setLoading(false);
-        showError(err.message || 'Google authentication failed.');
+        showError(getFriendlyErrorMessage(err));
       }
     });
 
     githubBtn.addEventListener('click', async () => {
+      alertBox.style.display = 'none';
       setLoading(true, 'Connecting GitHub...');
       try {
         await loginWithGitHub();
         window.location.href = '/dashboard.html';
       } catch (err) {
         setLoading(false);
-        showError(err.message || 'GitHub authentication failed.');
+        showError(getFriendlyErrorMessage(err));
       }
     });
 
@@ -157,6 +186,19 @@
       e.preventDefault();
       const email = document.getElementById('emailInput').value.trim();
       const pass = document.getElementById('passwordInput').value;
+
+      // Email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showError('Please enter a valid email address.');
+        return;
+      }
+
+      // Password length validation (min 8 chars)
+      if (pass.length < 8) {
+        showError('Password must be at least 8 characters long.');
+        return;
+      }
 
       setLoading(true, isSignUpMode ? 'Creating Account...' : 'Authenticating...');
       alertBox.style.display = 'none';
@@ -170,7 +212,7 @@
         window.location.href = '/dashboard.html';
       } catch (err) {
         setLoading(false);
-        showError(err.message || 'Authentication failed. Please verify credentials.');
+        showError(getFriendlyErrorMessage(err));
       }
     });
   </script>

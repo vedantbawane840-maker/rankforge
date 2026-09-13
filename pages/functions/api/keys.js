@@ -23,11 +23,25 @@ export async function onRequestPost(context) {
       const parts = token.split('.');
       if (parts.length === 3) {
         const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+        if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+          return new Response(JSON.stringify({ error: 'Unauthorized: Token expired' }), {
+            status: 401,
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
         uid = payload.user_id || payload.sub || uid;
+      } else {
+        return new Response(JSON.stringify({ error: 'Unauthorized: Invalid token format' }), {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' }
+        });
       }
     }
   } catch {
-    // Non-blocking fallback
+    return new Response(JSON.stringify({ error: 'Unauthorized: Token verification failed' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
   let body;
@@ -49,14 +63,29 @@ export async function onRequestPost(context) {
   }
 
   // Encrypt Apify Key with AES-256-GCM
-  const secret = context.env?.ENCRYPTION_KEY || 'default-rankforge-dev-secret-32b';
-  const encryptedKey = await encryptAesGcm(apifyKey, secret);
+  const secret = context.env?.ENCRYPTION_KEY;
+  if (!secret && !token.startsWith('rf_dev_')) {
+    return new Response(JSON.stringify({ error: 'Server configuration error: ENCRYPTION_KEY secret is required' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  let encryptedKey;
+  try {
+    encryptedKey = await encryptAesGcm(apifyKey, secret || 'sandbox-dev-secret-for-local-testing-only');
+  } catch {
+    return new Response(JSON.stringify({ error: 'Encryption failed: Unable to securely encrypt API key' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
 
   const projectId = context.env?.FIREBASE_PROJECT_ID;
   if (projectId) {
     try {
       const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/users/${uid}?updateMask.fieldPaths=apify_key_encrypted&updateMask.fieldPaths=updated_at`;
-      await fetch(firestoreUrl, {
+      const fRes = await fetch(firestoreUrl, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -66,8 +95,17 @@ export async function onRequestPost(context) {
           }
         })
       });
+      if (!fRes.ok) {
+        return new Response(JSON.stringify({ error: 'Database update failed' }), {
+          status: 502,
+          headers: { 'Content-Type': 'application/json' }
+        });
+      }
     } catch {
-      // Non-blocking
+      return new Response(JSON.stringify({ error: 'Network error connecting to database' }), {
+        status: 502,
+        headers: { 'Content-Type': 'application/json' }
+      });
     }
   }
 
@@ -76,6 +114,7 @@ export async function onRequestPost(context) {
     key_configured: true,
     message: 'Apify API key encrypted with AES-256 and saved.'
   }), {
+    status: 200,
     headers: { 'Content-Type': 'application/json' }
   });
 }
@@ -103,3 +142,4 @@ async function encryptAesGcm(plainText, secret) {
 
   return `${ivHex}:${cipherHex}`;
 }
+

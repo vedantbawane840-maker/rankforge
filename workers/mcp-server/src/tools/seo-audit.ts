@@ -127,7 +127,8 @@ export async function executeSeoAudit(
       crawl_summary: {
         pages_inspected: apifyResult.data?.length || 1,
         source: apifyResult.fallback ? 'RankForge Native Edge Crawler' : 'Apify Website Crawler',
-        byok_configured: !!apifyToken
+        byok_configured: !!apifyToken,
+        byok_notice: apifyToken ? 'Connected' : 'Please add your Apify key at rankforge.app/dashboard'
       },
       prioritized_action_items: prioritizedIssues
     };
