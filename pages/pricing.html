@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pricing Plans — RankForge</title>
+  <meta name="description" content="Predictable developer pricing for RankForge MCP Server. Scale from solo projects to enterprise agency operations.">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-content">
+      <a href="/" class="brand-logo">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>RankForge</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/#features" class="nav-link">Features</a></li>
+        <li><a href="/docs.html" class="nav-link">Documentation</a></li>
+        <li><a href="/pricing.html" class="nav-link active">Pricing</a></li>
+        <li><a href="/dashboard.html" class="nav-link">Dashboard</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="/login.html" class="btn btn-secondary btn-sm">Sign In</a>
+        <a href="/login.html" class="btn btn-primary btn-sm">Start Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="section">
+    <div class="container">
+      
+      <!-- Header -->
+      <div style="text-align: center; max-width: 700px; margin: 0 auto 3rem auto;">
+        <span class="badge badge-blue">Transparent Pricing</span>
+        <h1 style="margin: 0.75rem 0;">Simple Plans for Every Developer</h1>
+        <p style="font-size: 1.1rem; color: var(--text-secondary);">Empower your AI coding agents with server-side SEO and AEO intelligence.</p>
+
+        <!-- Billing Interval Toggle -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-top: 1.75rem;">
+          <span style="font-size: 0.9rem; font-weight: 500;">Monthly</span>
+          <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
+            <input type="checkbox" id="billingIntervalToggle" style="opacity: 0; width: 0; height: 0;">
+            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; transition: .2s;"></span>
+          </label>
+          <span style="font-size: 0.9rem; font-weight: 500;">Annual <span class="badge badge-success" style="margin-left: 0.25rem;">Save 20%</span></span>
+        </div>
+      </div>
+
+      <!-- 4 Plan Cards Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 4rem;">
+        
+        <!-- FREE Plan -->
+        <div class="card" style="display: flex; flex-direction: column;">
+          <h3>FREE</h3>
+          <div style="margin: 0.75rem 0 1.5rem 0;">
+            <span style="font-size: 2.5rem; font-weight: 700;">$0</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">/mo</span>
+          </div>
+
+          <a href="/login.html" class="btn btn-secondary btn-block" style="margin-bottom: 1.75rem;">
+            Start Free
+          </a>
+
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto;">
+            <li>✓ 1 project</li>
+            <li>✓ 10 audits/month</li>
+            <li>✓ Basic SEO audit only</li>
+            <li>✓ Community support</li>
+          </ul>
+        </div>
+
+        <!-- PRO Plan (Most Popular) -->
+        <div class="card" style="display: flex; flex-direction: column; border-color: var(--accent-blue); position: relative;">
+          <div style="position: absolute; top: 1rem; right: 1rem;">
+            <span class="badge badge-blue">MOST POPULAR</span>
+          </div>
+
+          <h3>PRO</h3>
+          <div style="margin: 0.75rem 0 1.5rem 0;">
+            <span id="pricePro" style="font-size: 2.5rem; font-weight: 700; color: var(--accent-blue);">$29</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">/mo</span>
+          </div>
+
+          <button class="btn btn-primary btn-block" data-plan-checkout="pro" style="margin-bottom: 1.75rem;">
+            Get Pro
+          </button>
+
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto;">
+            <li>✓ <strong>5 projects</strong></li>
+            <li>✓ <strong>100 audits/month</strong></li>
+            <li>✓ <strong>All 8 SEO tools</strong></li>
+            <li>✓ <strong>AEO/GEO audit</strong></li>
+            <li>✓ Email support</li>
+          </ul>
+        </div>
+
+        <!-- AGENCY Plan -->
+        <div class="card" style="display: flex; flex-direction: column;">
+          <h3>AGENCY</h3>
+          <div style="margin: 0.75rem 0 1.5rem 0;">
+            <span id="priceAgency" style="font-size: 2.5rem; font-weight: 700;">$79</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">/mo</span>
+          </div>
+
+          <button class="btn btn-secondary btn-block" data-plan-checkout="agency" style="margin-bottom: 1.75rem;">
+            Get Agency
+          </button>
+
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto;">
+            <li>✓ <strong>25 projects</strong></li>
+            <li>✓ <strong>500 audits/month</strong></li>
+            <li>✓ <strong>All tools + white label reports</strong></li>
+            <li>✓ Priority support</li>
+          </ul>
+        </div>
+
+        <!-- ENTERPRISE Plan -->
+        <div class="card" style="display: flex; flex-direction: column;">
+          <h3>ENTERPRISE</h3>
+          <div style="margin: 0.75rem 0 1.5rem 0;">
+            <span id="priceEnterprise" style="font-size: 2.5rem; font-weight: 700;">$199</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">/mo</span>
+          </div>
+
+          <button class="btn btn-secondary btn-block" data-plan-checkout="enterprise" style="margin-bottom: 1.75rem;">
+            Get Enterprise
+          </button>
+
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto;">
+            <li>✓ <strong>Unlimited projects</strong></li>
+            <li>✓ <strong>Unlimited audits</strong></li>
+            <li>✓ <strong>Custom branding</strong></li>
+            <li>✓ <strong>Dedicated support</strong></li>
+            <li>✓ <strong>Team seats (5)</strong></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- FAQ Section -->
+      <div style="max-width: 760px; margin: 0 auto;">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Billing FAQs</h2>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="card" style="padding: 1.25rem;">
+            <h4>What payment methods are supported?</h4>
+            <p style="font-size: 0.85rem; margin-top: 0.35rem;">Payments are securely handled via Dodo Payments supporting credit cards, debit cards, and Apple Pay globally.</p>
+          </div>
+          <div class="card" style="padding: 1.25rem;">
+            <h4>Can I change or cancel my plan at any time?</h4>
+            <p style="font-size: 0.85rem; margin-top: 0.35rem;">Yes, you can upgrade, downgrade, or cancel your subscription at any time directly through the dashboard with zero lock-in.</p>
+          </div>
+          <div class="card" style="padding: 1.25rem;">
+            <h4>How do Apify actor costs work?</h4>
+            <p style="font-size: 0.85rem; margin-top: 0.35rem;">RankForge charges $0 markup on Apify runs. You bring your own Apify key, and Apify bills you directly for standard actor compute.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>RankForge &copy; 2025</div>
+      <div style="display: flex; gap: 1.5rem;">
+        <a href="/docs.html">Documentation</a>
+        <a href="/dashboard.html">Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/assets/js/billing.js"></script>
+</body>
+</html>

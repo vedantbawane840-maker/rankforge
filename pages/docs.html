@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Setup Documentation — RankForge MCP Server</title>
+  <meta name="description" content="Step-by-step setup guides to connect RankForge MCP Server with Cursor, Claude Code, Windsurf, Cline, Continue.dev, Zed, and OpenAI Codex.">
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-content">
+      <a href="/" class="brand-logo">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        <span>RankForge</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="/#features" class="nav-link">Features</a></li>
+        <li><a href="/docs.html" class="nav-link active">Documentation</a></li>
+        <li><a href="/pricing.html" class="nav-link">Pricing</a></li>
+        <li><a href="/dashboard.html" class="nav-link">Dashboard</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="/login.html" class="btn btn-secondary btn-sm">Sign In</a>
+        <a href="/dashboard.html" class="btn btn-primary btn-sm">My Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="section">
+    <div class="container" style="max-width: 900px;">
+      
+      <!-- Header -->
+      <div style="margin-bottom: 3rem;">
+        <span class="badge badge-blue">Quickstart Guide</span>
+        <h1 style="margin: 0.5rem 0;">IDE Setup Documentation</h1>
+        <p style="font-size: 1.05rem; color: var(--text-secondary);">
+          Connect RankForge's server-side Beyond SEO engine to your AI coding assistant in 5 simple steps.
+        </p>
+      </div>
+
+      <!-- General 5-Step Process Card -->
+      <div class="card" style="margin-bottom: 3rem;">
+        <h3>The 5-Step Connection Workflow</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.25rem;">
+          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 1</div>
+            <p style="font-size: 0.82rem;">Sign up at <a href="/login.html" style="color: var(--accent-blue);">rankforge.app</a></p>
+          </div>
+          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 2</div>
+            <p style="font-size: 0.82rem;">Add your Apify key in the dashboard</p>
+          </div>
+          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 3</div>
+            <p style="font-size: 0.82rem;">Copy your personalized MCP URL</p>
+          </div>
+          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 4</div>
+            <p style="font-size: 0.82rem;">Paste config into your IDE</p>
+          </div>
+          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 5</div>
+            <p style="font-size: 0.82rem;">Prompt agent: <em>"audit my website"</em></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1. Cursor Setup -->
+      <div class="card" style="margin-bottom: 2rem;" id="guideCursor">
+        <h3>1. Cursor</h3>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add the following JSON configuration to <code>.cursor/mcp.json</code> in your project root or user settings:</p>
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>.cursor/mcp.json</span>
+            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeCursor').textContent); alert('Copied Cursor config!');">Copy</button>
+          </div>
+          <pre id="codeCursor"><code>{
+  "mcpServers": {
+    "rankforge": {
+      "url": "https://mcp.rankforge.app/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_JWT_TOKEN"
+      }
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- 2. Claude Code Setup -->
+      <div class="card" style="margin-bottom: 2rem;" id="guideClaude">
+        <h3>2. Claude Code</h3>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>claude_desktop_config.json</code> or register via terminal command:</p>
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>claude_desktop_config.json</span>
+            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeClaude').textContent); alert('Copied Claude config!');">Copy</button>
+          </div>
+          <pre id="codeClaude"><code>{
+  "mcpServers": {
+    "rankforge": {
+      "url": "https://mcp.rankforge.app/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_JWT_TOKEN"
+      }
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- 3. Windsurf Setup -->
+      <div class="card" style="margin-bottom: 2rem;" id="guideWindsurf">
+        <h3>3. Windsurf</h3>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>~/.codeium/windsurf/mcp_config.json</code>:</p>
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>mcp_config.json</span>
+            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeWindsurf').textContent); alert('Copied Windsurf config!');">Copy</button>
+          </div>
+          <pre id="codeWindsurf"><code>{
+  "mcpServers": {
+    "rankforge": {
+      "url": "https://mcp.rankforge.app/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_JWT_TOKEN"
+      }
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- 4. Cline Setup -->
+      <div class="card" style="margin-bottom: 2rem;" id="guideCline">
+        <h3>4. Cline</h3>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>settings.json</code> (or Cline MCP settings):</p>
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>settings.json</span>
+            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeCline').textContent); alert('Copied Cline config!');">Copy</button>
+          </div>
+          <pre id="codeCline"><code>{
+  "mcpServers": {
+    "rankforge": {
+      "url": "https://mcp.rankforge.app/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_JWT_TOKEN"
+      },
+      "disabled": false,
+      "autoApprove": ["seo_audit", "keyword_research", "competitor_analysis", "generate_report"]
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- 5. Continue.dev Setup -->
+      <div class="card" style="margin-bottom: 2rem;" id="guideContinue">
+        <h3>5. Continue.dev</h3>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>~/.continue/config.json</code>:</p>
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>config.json</span>
+            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeContinue').textContent); alert('Copied Continue.dev config!');">Copy</button>
+          </div>
+          <pre id="codeContinue"><code>{
+  "experimental": {
+    "modelContextProtocolServers": [
+      {
+        "transport": {
+          "type": "sse",
+          "url": "https://mcp.rankforge.app/mcp",
+          "requestOptions": {
+            "headers": {
+              "Authorization": "Bearer YOUR_JWT_TOKEN"
+            }
+          }
+        }
+      }
+    ]
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- 6. Zed Setup -->
+      <div class="card" style="margin-bottom: 2rem;" id="guideZed">
+        <h3>6. Zed</h3>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to your Zed editor <code>settings.json</code>:</p>
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>settings.json</span>
+            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeZed').textContent); alert('Copied Zed config!');">Copy</button>
+          </div>
+          <pre id="codeZed"><code>{
+  "context_servers": {
+    "rankforge": {
+      "url": "https://mcp.rankforge.app/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_JWT_TOKEN"
+      }
+    }
+  }
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- 7. Codex Setup (Separate Section) -->
+      <div class="card" style="margin-bottom: 3rem;" id="guideCodex">
+        <h3>7. OpenAI Codex & ChatGPT Actions</h3>
+        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Connect Codex or custom GPTs via the Login with ChatGPT flow:</p>
+        <div class="code-box">
+          <div class="code-box-header">
+            <span>Custom GPT Action Setup</span>
+            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('codeCodex').textContent); alert('Copied Codex instructions!');">Copy</button>
+          </div>
+          <pre id="codeCodex"><code>1. Navigate to your Custom GPT -> Configure -> Actions -> Create new action.
+2. In the Authentication settings, choose "API Key" -> Type "Bearer".
+3. Enter your Personal RankForge Token.
+4. Schema URL: https://mcp.rankforge.app/mcp/tools
+5. Your custom GPT can now invoke all 8 SEO & AEO tools automatically!</code></pre>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <div>RankForge &copy; 2025</div>
+      <div style="display: flex; gap: 1.5rem;">
+        <a href="/pricing.html">Pricing</a>
+        <a href="/dashboard.html">Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

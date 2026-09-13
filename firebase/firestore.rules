@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User profile, plan limits, and encrypted keys
+    match /users/{userId} {
+      // Users can only read their own document
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // User self-registration: must initialize with free plan and defaults
+      allow create: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.plan in ['free', 'pro', 'agency', 'enterprise']
+        && request.resource.data.audits_used == 0;
+      
+      // Users can update their profile name and encrypted key, but CANNOT tamper with plan limits
+      allow update: if request.auth != null && request.auth.uid == userId
+        && request.resource.data.plan == resource.data.plan
+        && request.resource.data.audits_limit == resource.data.audits_limit
+        && request.resource.data.projects_limit == resource.data.projects_limit
+        && request.resource.data.audits_used == resource.data.audits_used;
+
+      // Allow delete for account deletion
+      allow delete: if request.auth != null && request.auth.uid == userId;
+      
+      // Audit history subcollection
+      match /audits/{auditId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      // Projects subcollection
+      match /projects/{projectId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+    
+    // Default deny all other paths
+    match /{document=**} {
+      allow read, write: false;
+    }
+  }
+}
