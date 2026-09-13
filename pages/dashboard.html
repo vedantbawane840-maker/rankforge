@@ -3,159 +3,170 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard — RankForge</title>
+  <title>Developer Console — RankForge MCP</title>
   <meta name="description" content="RankForge MCP Server Developer Dashboard — Manage your API keys, usage limits, and IDE connections.">
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>">
 </head>
 <body>
 
-  <!-- Top App Navigation -->
+  <!-- Top Application Bar -->
   <nav class="navbar">
     <div class="container nav-content">
-      <a href="/" class="brand-logo">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      <a href="/" class="brand-logo" aria-label="RankForge Home">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
         <span>RankForge</span>
       </a>
 
       <div style="display: flex; align-items: center; gap: 1rem;">
-        <span id="overviewUserEmail" style="font-size: 0.85rem; color: var(--text-secondary);">loading...</span>
+        <span id="overviewUserEmail" style="font-size: 0.85rem; color: var(--text-secondary); font-family: var(--font-mono);">developer@rankforge.app</span>
         <span id="overviewPlanBadge" class="badge badge-neutral">FREE PLAN</span>
         <button id="logoutBtn" class="btn btn-outline btn-sm">Sign Out</button>
       </div>
     </div>
   </nav>
 
-  <!-- Dashboard Sidebar Layout -->
+  <!-- Dashboard Workspace Layout -->
   <div class="dashboard-layout">
     
-    <!-- Sidebar Navigation -->
+    <!-- Workspace Sidebar Navigation -->
     <aside class="dashboard-sidebar">
       <nav class="sidebar-nav">
         <button class="sidebar-link active" data-tab="overview">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect></svg>
           <span>Overview</span>
         </button>
 
         <button class="sidebar-link" data-tab="keys">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-2-2l2 2m0 0L9 14l-4 4H1v-4l4-4 8-8z"></path></svg>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 2l-2 2m-2-2l2 2m0 0L9 14l-4 4H1v-4l4-4 8-8z"></path></svg>
           <span>API Keys</span>
         </button>
 
         <button class="sidebar-link" data-tab="usage">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-          <span>Usage</span>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          <span>Usage &amp; Quota</span>
         </button>
 
         <button class="sidebar-link" data-tab="plans">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
-          <span>Plans</span>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          <span>Plans &amp; Billing</span>
         </button>
 
         <button class="sidebar-link" data-tab="docs">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-          <span>Docs</span>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          <span>IDE Integration</span>
         </button>
 
         <button class="sidebar-link" data-tab="settings">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
           <span>Settings</span>
         </button>
       </nav>
 
       <div class="sidebar-footer">
-        <div style="font-size: 0.75rem; color: var(--text-muted);">
-          MCP Endpoint: <br>
-          <span style="color: var(--color-success)">● Operational</span>
+        <div style="font-size: 0.78rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+          <span class="pulse-dot"></span>
+          <span>Cloudflare Edge Active</span>
         </div>
       </div>
     </aside>
 
-    <!-- Main Content Panels -->
+    <!-- Main Workspace Panels -->
     <main class="dashboard-main">
       
       <!-- 1. OVERVIEW PANEL -->
       <section id="panel-overview" class="dashboard-panel active">
-        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
           <div>
-            <h2>Welcome back, <span id="overviewUserName">Developer</span></h2>
-            <p style="font-size: 0.9rem; margin-top: 0.25rem;">Monitor your AI Agent SEO engine usage and active projects.</p>
+            <h2>Welcome back, <span id="overviewUserName" class="gradient-text">Developer</span></h2>
+            <p style="font-size: 0.92rem; margin-top: 0.35rem;">Monitor your AI Agent SEO engine usage and active projects.</p>
           </div>
           <div id="overviewUpgradeContainer">
             <a href="/pricing.html" id="overviewUpgradeBtn" class="btn btn-primary btn-sm">Upgrade Plan</a>
           </div>
         </div>
 
-        <!-- Usage Cards Grid -->
+        <!-- Metric Cards Grid -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
           
-          <!-- Audits Used -->
+          <!-- Monthly Audits Card -->
           <div class="card">
-            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Monthly Audits</div>
-            <div id="overviewAuditsCount" style="font-size: 1.6rem; font-weight: 700; margin: 0.5rem 0;">2 / 10 audits used</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Monthly Audits Quota</div>
+            <div id="overviewAuditsCount" style="font-size: 1.7rem; font-weight: 700; margin: 0.6rem 0; color: #f0f6fc;">2 / 10 audits used</div>
             <div class="progress-container">
               <div id="overviewAuditsProgress" class="progress-bar" style="width: 20%;"></div>
             </div>
-            <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
-              Resets: <span id="overviewResetCountdown">In 21 days</span>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.6rem;">
+              Resets: <span id="overviewResetCountdown" style="color: var(--text-secondary);">In 21 days</span>
             </div>
           </div>
 
-          <!-- Projects Count -->
+          <!-- Active Projects Card -->
           <div class="card">
-            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">Active Projects</div>
-            <div id="overviewProjectsCount" style="font-size: 1.6rem; font-weight: 700; margin: 0.5rem 0;">1 / 1</div>
-            <p style="font-size: 0.82rem; margin: 0;">Connected domains being audited by your AI agents.</p>
+            <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Active Projects</div>
+            <div id="overviewProjectsCount" style="font-size: 1.7rem; font-weight: 700; margin: 0.6rem 0; color: #f0f6fc;">1 / 1</div>
+            <p style="font-size: 0.82rem; margin: 0;">Target domains actively audited by your coding assistants.</p>
           </div>
 
-          <!-- MCP Protocol Status -->
+          <!-- MCP Protocol Status Card -->
           <div class="card">
-            <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600;">MCP Protocol</div>
-            <div style="font-size: 1.6rem; font-weight: 700; color: var(--color-success); margin: 0.5rem 0;">Ready</div>
-            <p style="font-size: 0.82rem; margin: 0;">JSON-RPC 2.0 over HTTP on Cloudflare Edge.</p>
+            <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">MCP Protocol Status</div>
+            <div style="font-size: 1.7rem; font-weight: 700; color: var(--color-success); margin: 0.6rem 0; display: flex; align-items: center; gap: 0.5rem;">
+              <span class="pulse-dot"></span>
+              <span>Ready</span>
+            </div>
+            <p style="font-size: 0.82rem; margin: 0;">JSON-RPC 2.0 over HTTP on Cloudflare Workers edge.</p>
           </div>
 
         </div>
 
         <!-- Quick MCP Integration Card -->
-        <div class="card">
-          <h4>Your MCP Connection URL</h4>
-          <p style="font-size: 0.85rem; margin: 0.4rem 0 1rem 0;">Add this URL to your IDE configuration file to give your agent full access to all 8 SEO tools.</p>
-          <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem;">
-            <input type="text" id="overviewMcpUrl" class="form-control" readonly value="https://rankforge-mcp.workers.dev/mcp" aria-label="MCP Connection URL">
-            <button class="btn btn-secondary" data-copy-target="overviewMcpUrl">Copy</button>
+        <div class="card card-glow">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <h4>Your MCP Connection URL</h4>
+            <span class="badge badge-blue">Universal Endpoint</span>
           </div>
-          <p style="font-size: 0.78rem; color: var(--text-muted);">
-            Endpoint: <code style="color: var(--accent-blue);">https://rankforge-mcp.workers.dev/mcp</code> &bull; Custom Domain: <code>https://mcp.rankforge.app/mcp</code>
+          <p style="font-size: 0.86rem; margin: 0 0 1.25rem 0;">Add this endpoint to your IDE configuration file to grant your coding agent access to all 8 SEO tools.</p>
+          
+          <div style="display: flex; gap: 0.65rem; margin-bottom: 1rem; max-width: 760px;">
+            <input type="text" id="overviewMcpUrl" class="form-control" readonly value="https://rankforge-mcp.workers.dev/mcp" aria-label="MCP Connection URL" style="font-family: var(--font-mono); font-size: 0.85rem;">
+            <button class="btn btn-secondary" data-copy-target="overviewMcpUrl">Copy URL</button>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">
+            Production Edge Endpoint: <code style="color: var(--accent-primary-light);">https://rankforge-mcp.workers.dev/mcp</code>
           </p>
         </div>
       </section>
 
       <!-- 2. API KEYS PANEL -->
       <section id="panel-keys" class="dashboard-panel">
-        <h2>API Keys & Credentials</h2>
-        <p style="font-size: 0.9rem; margin: 0.25rem 0 2rem 0;">Manage your Bring Your Own Key (BYOK) Apify integration and MCP server credentials.</p>
+        <div style="margin-bottom: 2rem;">
+          <h2>API Keys &amp; Credentials</h2>
+          <p style="font-size: 0.92rem; margin-top: 0.35rem;">Manage your Bring Your Own Key (BYOK) Apify integration and MCP server authentication.</p>
+        </div>
 
-        <!-- Apify Key Section -->
+        <!-- Apify Key Card -->
         <div class="card" style="margin-bottom: 2rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.25rem;">
             <div>
-              <h4>Apify Personal API Key</h4>
-              <p style="font-size: 0.85rem; margin-top: 0.2rem;">Used to execute official website crawlers and SERP scrapers with zero markup.</p>
+              <h4>Apify Personal API Key (BYOK)</h4>
+              <p style="font-size: 0.85rem; margin-top: 0.25rem;">Powers web crawlers and SERP scrapers with $0 markup on your compute.</p>
             </div>
             <span id="apifyKeyStatusBadge" class="badge badge-neutral">Not configured</span>
           </div>
 
-          <form id="saveApifyKeyForm" style="max-width: 600px;">
+          <form id="saveApifyKeyForm" style="max-width: 650px;">
             <div class="form-group">
-              <label class="form-label" for="apifyKeyInput">Enter Key</label>
-              <div style="display: flex; gap: 0.5rem;">
-                <input type="password" id="apifyKeyInput" class="form-control" placeholder="apify_api_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required autocomplete="off">
-                <button type="button" id="toggleApifyKeyVisibility" class="btn btn-secondary btn-sm" style="width: 70px;">Show</button>
-                <button type="submit" id="saveKeyBtn" class="btn btn-primary btn-sm" style="white-space: nowrap;">Save Key</button>
+              <label class="form-label" for="apifyKeyInput">Enter Apify API Token</label>
+              <div style="display: flex; gap: 0.65rem;">
+                <input type="password" id="apifyKeyInput" class="form-control" placeholder="apify_api_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" required autocomplete="off" style="font-family: var(--font-mono); font-size: 0.85rem;">
+                <button type="button" id="toggleApifyKeyVisibility" class="btn btn-secondary btn-sm" style="min-width: 70px;">Show</button>
+                <button type="submit" id="saveKeyBtn" class="btn btn-primary btn-sm">Save Key</button>
               </div>
-              <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
-                Keys are encrypted with AES-256 before being stored in Firestore.
+              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.65rem;">
+                🛡️ Keys are encrypted with AES-256 before being stored in Firestore and decrypted only during execution.
               </p>
             </div>
           </form>
@@ -163,34 +174,34 @@
 
         <!-- MCP Server URL Display -->
         <div class="card" style="margin-bottom: 2rem;">
-          <h4>MCP Server URL</h4>
-          <p style="font-size: 0.85rem; margin: 0.4rem 0 1rem 0;">Direct Cloudflare Worker MCP Endpoint:</p>
+          <h4>MCP Server Endpoints</h4>
+          <p style="font-size: 0.85rem; margin: 0.4rem 0 1.25rem 0;">Direct Cloudflare Worker MCP Endpoint:</p>
           
-          <div style="display: flex; gap: 0.5rem; max-width: 700px; margin-bottom: 1rem;">
-            <input type="text" id="mcpUrlDisplay" class="form-control" readonly value="https://rankforge-mcp.workers.dev/mcp" aria-label="MCP Server URL">
+          <div style="display: flex; gap: 0.65rem; max-width: 760px; margin-bottom: 1.5rem;">
+            <input type="text" id="mcpUrlDisplay" class="form-control" readonly value="https://rankforge-mcp.workers.dev/mcp" aria-label="MCP Server URL" style="font-family: var(--font-mono); font-size: 0.85rem;">
             <button class="btn btn-secondary" data-copy-target="mcpUrlDisplay">Copy</button>
           </div>
 
-          <h5 style="margin-top: 1rem; margin-bottom: 0.4rem; font-size: 0.88rem;">Authenticated Query Parameter URL (for simple IDEs / Codex):</h5>
-          <div style="display: flex; gap: 0.5rem; max-width: 700px; margin-bottom: 1.5rem;">
-            <input type="text" id="mcpTokenUrlDisplay" class="form-control" readonly value="https://rankforge-mcp.workers.dev/mcp?token=USER_JWT_TOKEN" aria-label="Authenticated MCP Token URL">
+          <h5 style="margin-bottom: 0.45rem; font-size: 0.88rem;">Authenticated Query Parameter URL (for simple IDEs &amp; Codex):</h5>
+          <div style="display: flex; gap: 0.65rem; max-width: 760px; margin-bottom: 1.5rem;">
+            <input type="text" id="mcpTokenUrlDisplay" class="form-control" readonly value="https://rankforge-mcp.workers.dev/mcp?token=USER_JWT_TOKEN" aria-label="Authenticated MCP Token URL" style="font-family: var(--font-mono); font-size: 0.85rem;">
             <button class="btn btn-secondary" data-copy-target="mcpTokenUrlDisplay">Copy</button>
           </div>
 
           <!-- Quick Setup Instructions per IDE -->
-          <h4 style="margin-top: 1.5rem;">Quick Setup for Your IDE</h4>
+          <h4 style="margin-top: 1.75rem;">Quick Setup for Your IDE</h4>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem;">
-            <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-              <div style="font-weight: 600; font-size: 0.88rem; margin-bottom: 0.25rem;">Cursor</div>
-              <p style="font-size: 0.78rem;">Add to <code>.cursor/mcp.json</code> under <code>mcpServers.rankforge</code>.</p>
+            <div style="background-color: var(--bg-surface); padding: 1.15rem; border-radius: var(--radius-md); border: 1px solid var(--border-card);">
+              <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.35rem; color: #f0f6fc;">Cursor</div>
+              <p style="font-size: 0.82rem;">Add to <code>.cursor/mcp.json</code> under <code>mcpServers.rankforge</code>.</p>
             </div>
-            <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-              <div style="font-weight: 600; font-size: 0.88rem; margin-bottom: 0.25rem;">Claude Code</div>
-              <p style="font-size: 0.78rem;">Run <code>claude mcp add rankforge &lt;url&gt;</code> in your terminal.</p>
+            <div style="background-color: var(--bg-surface); padding: 1.15rem; border-radius: var(--radius-md); border: 1px solid var(--border-card);">
+              <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.35rem; color: #f0f6fc;">Claude Code</div>
+              <p style="font-size: 0.82rem;">Run <code>claude mcp add rankforge &lt;url&gt;</code> in your terminal.</p>
             </div>
-            <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-              <div style="font-weight: 600; font-size: 0.88rem; margin-bottom: 0.25rem;">Windsurf / Cline</div>
-              <p style="font-size: 0.78rem;">Add to <code>mcp_config.json</code> with the Bearer authorization header.</p>
+            <div style="background-color: var(--bg-surface); padding: 1.15rem; border-radius: var(--radius-md); border: 1px solid var(--border-card);">
+              <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.35rem; color: #f0f6fc;">Windsurf / Cline</div>
+              <p style="font-size: 0.82rem;">Add to <code>mcp_config.json</code> with Bearer authorization header.</p>
             </div>
           </div>
         </div>
@@ -198,23 +209,25 @@
 
       <!-- 3. USAGE PANEL -->
       <section id="panel-usage" class="dashboard-panel">
-        <h2>Usage & Audit Logs</h2>
-        <p style="font-size: 0.9rem; margin: 0.25rem 0 2rem 0;">Track your monthly audit consumption across all 8 MCP tools.</p>
+        <div style="margin-bottom: 2rem;">
+          <h2>Usage &amp; Audit Logs</h2>
+          <p style="font-size: 0.92rem; margin-top: 0.35rem;">Track your monthly audit consumption across all 8 MCP tools.</p>
+        </div>
 
         <!-- Visualization Bar -->
         <div class="card" style="margin-bottom: 2rem;">
-          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.65rem;">
             <h4>Monthly Quota Allocation</h4>
-            <span style="font-size: 0.85rem; color: var(--text-secondary);">
-              <strong id="auditsRemainingDisplay">8</strong> audits remaining
+            <span style="font-size: 0.88rem; color: var(--text-secondary);">
+              <strong id="auditsRemainingDisplay" style="color: #f0f6fc;">8</strong> audits remaining
             </span>
           </div>
           <div class="progress-container" style="height: 10px;">
             <div id="usageRemainingMeter" class="progress-bar" style="width: 20%;"></div>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
-            <span>Used: <span id="auditsUsedDisplay">2 / 10</span></span>
-            <span>Monthly Reset in 21 days</span>
+          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--text-muted); margin-top: 0.65rem;">
+            <span>Consumed: <span id="auditsUsedDisplay" style="color: var(--text-secondary);">2 / 10</span></span>
+            <span>Cycle resets in 21 days</span>
           </div>
         </div>
 
@@ -234,23 +247,23 @@
               <tr>
                 <td>Today, 14:22</td>
                 <td>acmedental.com</td>
-                <td><code>seo_audit</code></td>
+                <td><code style="color: var(--accent-primary-light);">seo_audit</code></td>
                 <td><span class="badge badge-success">Completed</span></td>
-                <td>78 / 100</td>
+                <td><strong>78 / 100</strong></td>
               </tr>
               <tr>
                 <td>Yesterday, 09:45</td>
                 <td>acmedental.com</td>
-                <td><code>keyword_research</code></td>
+                <td><code style="color: var(--accent-primary-light);">keyword_research</code></td>
                 <td><span class="badge badge-success">Completed</span></td>
                 <td>14 Clusters</td>
               </tr>
               <tr>
                 <td>3 days ago</td>
                 <td>mysite.io</td>
-                <td><code>technical_seo</code></td>
+                <td><code style="color: var(--accent-primary-light);">technical_seo</code></td>
                 <td><span class="badge badge-success">Completed</span></td>
-                <td>92 / 100 (Passed CWV)</td>
+                <td><strong>92 / 100</strong> (Passed CWV)</td>
               </tr>
             </tbody>
           </table>
@@ -259,41 +272,43 @@
 
       <!-- 4. PLANS PANEL -->
       <section id="panel-plans" class="dashboard-panel">
-        <h2>Plans & Subscriptions</h2>
-        <p style="font-size: 0.9rem; margin: 0.25rem 0 2rem 0;">Upgrade your plan seamlessly via Dodo Payments.</p>
+        <div style="margin-bottom: 2rem;">
+          <h2>Plans &amp; Subscriptions</h2>
+          <p style="font-size: 0.92rem; margin-top: 0.35rem;">Manage your subscription seamlessly via Dodo Payments.</p>
+        </div>
 
         <div class="card" style="margin-bottom: 2.5rem;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
             <div>
-              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Current Plan</div>
-              <h3 id="plansCurrentName" style="margin-top: 0.25rem;">FREE PLAN</h3>
-              <p style="font-size: 0.85rem; margin-top: 0.25rem;">10 audits/month • 1 project • Community support</p>
+              <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; font-weight: 600; letter-spacing: 0.05em;">Current Subscription</div>
+              <h3 id="plansCurrentName" style="margin-top: 0.35rem;">FREE PLAN</h3>
+              <p style="font-size: 0.88rem; margin-top: 0.25rem;">10 audits/month &bull; 1 project &bull; Community support</p>
             </div>
             <a href="/pricing.html" class="btn btn-outline btn-sm">View Full Comparison</a>
           </div>
         </div>
 
         <!-- Upgrade Cards Grid -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
           
           <div class="card">
             <h4>Pro</h4>
-            <div style="font-size: 1.8rem; font-weight: 700; margin: 0.5rem 0;">$29<span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">/mo</span></div>
-            <p style="font-size: 0.82rem; margin-bottom: 1.25rem;">100 audits/month • 5 projects • All 8 SEO tools • AEO/GEO engine</p>
+            <div style="font-size: 2rem; font-weight: 700; margin: 0.5rem 0; color: var(--accent-primary-light);">$29<span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">/mo</span></div>
+            <p style="font-size: 0.84rem; margin-bottom: 1.25rem; line-height: 1.6;">100 audits/month &bull; 5 projects &bull; All 8 SEO tools &bull; AEO/GEO engine</p>
             <button class="btn btn-primary btn-block btn-sm" data-upgrade-plan="pro">Upgrade to Pro</button>
           </div>
 
           <div class="card">
             <h4>Agency</h4>
-            <div style="font-size: 1.8rem; font-weight: 700; margin: 0.5rem 0;">$79<span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">/mo</span></div>
-            <p style="font-size: 0.82rem; margin-bottom: 1.25rem;">500 audits/month • 25 projects • White-label reports • Priority support</p>
+            <div style="font-size: 2rem; font-weight: 700; margin: 0.5rem 0;">$79<span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">/mo</span></div>
+            <p style="font-size: 0.84rem; margin-bottom: 1.25rem; line-height: 1.6;">500 audits/month &bull; 25 projects &bull; White-label reports &bull; Priority support</p>
             <button class="btn btn-secondary btn-block btn-sm" data-upgrade-plan="agency">Upgrade to Agency</button>
           </div>
 
           <div class="card">
             <h4>Enterprise</h4>
-            <div style="font-size: 1.8rem; font-weight: 700; margin: 0.5rem 0;">$199<span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">/mo</span></div>
-            <p style="font-size: 0.82rem; margin-bottom: 1.25rem;">Unlimited audits • Unlimited projects • 5 team seats • Dedicated support</p>
+            <div style="font-size: 2rem; font-weight: 700; margin: 0.5rem 0;">$199<span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">/mo</span></div>
+            <p style="font-size: 0.84rem; margin-bottom: 1.25rem; line-height: 1.6;">Unlimited audits &bull; Unlimited projects &bull; 5 team seats &bull; Dedicated support</p>
             <button class="btn btn-secondary btn-block btn-sm" data-upgrade-plan="enterprise">Upgrade to Enterprise</button>
           </div>
 
@@ -302,11 +317,13 @@
 
       <!-- 5. DOCS PANEL -->
       <section id="panel-docs" class="dashboard-panel">
-        <h2>IDE Integration Guides</h2>
-        <p style="font-size: 0.9rem; margin: 0.25rem 0 1.5rem 0;">Select your AI coding IDE to view the exact configuration snippet:</p>
+        <div style="margin-bottom: 1.75rem;">
+          <h2>IDE Integration Guides</h2>
+          <p style="font-size: 0.92rem; margin-top: 0.35rem;">Select your AI coding IDE to view your personalized configuration snippet:</p>
+        </div>
 
         <!-- IDE Selector Tabs -->
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+        <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
           <button class="btn btn-secondary btn-sm dashboard-ide-tab active" data-ide="cursor">Cursor</button>
           <button class="btn btn-secondary btn-sm dashboard-ide-tab" data-ide="claude">Claude Code</button>
           <button class="btn btn-secondary btn-sm dashboard-ide-tab" data-ide="windsurf">Windsurf</button>
@@ -318,35 +335,37 @@
         <div class="code-box">
           <div class="code-box-header">
             <span>Configuration Block</span>
-            <button class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('dashboardIdeCodePre').textContent); alert('Copied config snippet!');">Copy</button>
+            <button id="dashboardCopySnippetBtn" class="btn btn-outline btn-sm">Copy Snippet</button>
           </div>
           <pre id="dashboardIdeCodePre"><code>// Loading IDE configuration...</code></pre>
         </div>
 
-        <div style="margin-top: 1.5rem;">
+        <div style="margin-top: 1.75rem;">
           <a href="/docs.html" class="btn btn-outline btn-sm">&rarr; Open Full Setup Documentation Page</a>
         </div>
       </section>
 
       <!-- 6. SETTINGS PANEL -->
       <section id="panel-settings" class="dashboard-panel">
-        <h2>Account Settings</h2>
-        <p style="font-size: 0.9rem; margin: 0.25rem 0 2rem 0;">Manage your session and developer preferences.</p>
+        <div style="margin-bottom: 2rem;">
+          <h2>Account Settings</h2>
+          <p style="font-size: 0.92rem; margin-top: 0.35rem;">Manage your session and developer preferences.</p>
+        </div>
 
         <div class="card" style="max-width: 600px;">
           <div class="form-group">
             <label class="form-label">Email Address</label>
-            <input type="text" class="form-control" readonly value="developer@rankforge.app">
+            <input type="text" id="settingsEmailInput" class="form-control" readonly value="developer@rankforge.app" style="font-family: var(--font-mono); font-size: 0.85rem;">
           </div>
 
           <div class="form-group">
             <label class="form-label">Session ID</label>
-            <input type="text" class="form-control" readonly value="sess_rf_edge_2025">
+            <input type="text" class="form-control" readonly value="sess_rf_edge_2025" style="font-family: var(--font-mono); font-size: 0.85rem;">
           </div>
 
-          <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+          <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-default);">
             <button class="btn btn-secondary" onclick="localStorage.removeItem('rf_dev_session'); window.location.href='/login.html';">
-              Clear Local Session & Sign Out
+              Clear Local Session &amp; Sign Out
             </button>
           </div>
         </div>
@@ -356,5 +375,24 @@
   </div>
 
   <script type="module" src="/assets/js/dashboard.js"></script>
+  <script>
+    // Copy snippet handler for panel-docs
+    document.addEventListener('DOMContentLoaded', () => {
+      const copyBtn = document.getElementById('dashboardCopySnippetBtn');
+      const pre = document.getElementById('dashboardIdeCodePre');
+      if (copyBtn && pre) {
+        copyBtn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(pre.textContent);
+            copyBtn.textContent = 'Copied! ✓';
+            setTimeout(() => { copyBtn.textContent = 'Copy Snippet'; }, 2000);
+          } catch {
+            copyBtn.textContent = 'Copied! ✓';
+            setTimeout(() => { copyBtn.textContent = 'Copy Snippet'; }, 2000);
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>

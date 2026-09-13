@@ -4,17 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Setup Documentation — RankForge MCP Server</title>
-  <meta name="description" content="Step-by-step setup guides to connect RankForge MCP Server with Cursor, Claude Code, Windsurf, Cline, Continue.dev, Zed, and OpenAI Codex.">
+  <meta name="description" content="Step-by-step setup guides to connect RankForge MCP Server with Cursor, Claude Code, Windsurf, Cline, Zed, and OpenAI Codex.">
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>">
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- Ambient Backdrop Glow -->
+  <div class="ambient-glow" aria-hidden="true"></div>
+
+  <!-- Global Header / Navigation -->
   <nav class="navbar">
     <div class="container nav-content">
-      <a href="/" class="brand-logo">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      <a href="/" class="brand-logo" aria-label="RankForge Home">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
         <span>RankForge</span>
       </a>
 
@@ -32,53 +37,70 @@
     </div>
   </nav>
 
-  <main class="section">
-    <div class="container" style="max-width: 900px;">
+  <main class="section" style="padding-top: 5rem;">
+    <div class="container" style="max-width: 960px;">
       
-      <!-- Header -->
-      <div style="margin-bottom: 3rem;">
+      <!-- Docs Header -->
+      <div style="margin-bottom: 3.5rem;">
         <span class="badge badge-blue">Quickstart Guide</span>
-        <h1 style="margin: 0.5rem 0;">IDE Setup Documentation</h1>
-        <p style="font-size: 1.05rem; color: var(--text-secondary);">
+        <h1 style="margin: 0.75rem 0 1rem 0;">IDE Setup &amp; MCP Integration</h1>
+        <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6;">
           Connect RankForge's server-side Beyond SEO engine to your AI coding assistant in 5 simple steps.
         </p>
       </div>
 
-      <!-- General 5-Step Process Card -->
-      <div class="card" style="margin-bottom: 3rem;">
-        <h3>The 5-Step Connection Workflow</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.25rem;">
-          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 1</div>
-            <p style="font-size: 0.82rem;">Sign up at <a href="/login.html" style="color: var(--accent-blue);">rankforge.app</a></p>
+      <!-- General 5-Step Process Pipeline -->
+      <div class="card" style="margin-bottom: 3.5rem;">
+        <h3>The 5-Step Integration Workflow</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+          
+          <div style="background-color: var(--bg-surface); padding: 1.15rem; border-radius: var(--radius-md); border: 1px solid var(--border-card);">
+            <div style="font-weight: 700; color: var(--accent-primary-light); font-size: 0.85rem; margin-bottom: 0.35rem;">Step 1</div>
+            <h4 style="font-size: 0.92rem; margin-bottom: 0.35rem;">Sign Up</h4>
+            <p style="font-size: 0.8rem;">Create an account at <a href="/login.html" style="color: var(--accent-primary-light);">rankforge.app</a></p>
           </div>
-          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 2</div>
-            <p style="font-size: 0.82rem;">Add your Apify key in the dashboard</p>
+
+          <div style="background-color: var(--bg-surface); padding: 1.15rem; border-radius: var(--radius-md); border: 1px solid var(--border-card);">
+            <div style="font-weight: 700; color: var(--accent-primary-light); font-size: 0.85rem; margin-bottom: 0.35rem;">Step 2</div>
+            <h4 style="font-size: 0.92rem; margin-bottom: 0.35rem;">BYOK Apify</h4>
+            <p style="font-size: 0.8rem;">Save your personal key in the dashboard</p>
           </div>
-          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 3</div>
-            <p style="font-size: 0.82rem;">Copy your personalized MCP URL</p>
+
+          <div style="background-color: var(--bg-surface); padding: 1.15rem; border-radius: var(--radius-md); border: 1px solid var(--border-card);">
+            <div style="font-weight: 700; color: var(--accent-primary-light); font-size: 0.85rem; margin-bottom: 0.35rem;">Step 3</div>
+            <h4 style="font-size: 0.92rem; margin-bottom: 0.35rem;">Copy URL</h4>
+            <p style="font-size: 0.8rem;">Copy your custom authenticated MCP endpoint</p>
           </div>
-          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 4</div>
-            <p style="font-size: 0.82rem;">Paste config into your IDE</p>
+
+          <div style="background-color: var(--bg-surface); padding: 1.15rem; border-radius: var(--radius-md); border: 1px solid var(--border-card);">
+            <div style="font-weight: 700; color: var(--accent-primary-light); font-size: 0.85rem; margin-bottom: 0.35rem;">Step 4</div>
+            <h4 style="font-size: 0.92rem; margin-bottom: 0.35rem;">Paste Config</h4>
+            <p style="font-size: 0.8rem;">Paste JSON into Cursor, Claude, or Windsurf</p>
           </div>
-          <div style="background-color: var(--bg-surface); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-color);">
-            <div style="font-weight: 600; color: var(--accent-blue); margin-bottom: 0.25rem;">Step 5</div>
-            <p style="font-size: 0.82rem;">Prompt agent: <em>"audit my website"</em></p>
+
+          <div style="background-color: var(--bg-surface); padding: 1.15rem; border-radius: var(--radius-md); border: 1px solid var(--border-card);">
+            <div style="font-weight: 700; color: var(--color-success); font-size: 0.85rem; margin-bottom: 0.35rem;">Step 5</div>
+            <h4 style="font-size: 0.92rem; margin-bottom: 0.35rem;">Prompt Agent</h4>
+            <p style="font-size: 0.8rem;">Ask: <em>"audit my website for SEO &amp; AEO"</em></p>
           </div>
+
         </div>
       </div>
 
+      <!-- IDE Guides Section -->
+      <h2 style="margin-bottom: 1.5rem;">IDE-Specific Configurations</h2>
+
       <!-- 1. Cursor Setup -->
       <div class="card" style="margin-bottom: 2rem;" id="guideCursor">
-        <h3>1. Cursor</h3>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add the following JSON configuration to <code>.cursor/mcp.json</code> in your project root or user settings:</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3>1. Cursor</h3>
+          <span class="badge badge-neutral">JSON Config</span>
+        </div>
+        <p style="font-size: 0.88rem; margin-bottom: 0.75rem;">Add the following block to <code>.cursor/mcp.json</code> in your project workspace or global user settings:</p>
         <div class="code-box">
           <div class="code-box-header">
             <span>.cursor/mcp.json</span>
-            <button class="btn btn-outline btn-sm copy-btn" data-target="codeCursor" aria-label="Copy Cursor MCP configuration">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeCursor">Copy Snippet</button>
           </div>
           <pre id="codeCursor"><code>{
   "mcpServers": {
@@ -95,20 +117,24 @@
 
       <!-- 2. Claude Code Setup -->
       <div class="card" style="margin-bottom: 2rem;" id="guideClaude">
-        <h3>2. Claude Code</h3>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Option A: Add directly via the Claude Code CLI in your terminal:</p>
-        <div class="code-box" style="margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3>2. Claude Code</h3>
+          <span class="badge badge-neutral">CLI &amp; JSON</span>
+        </div>
+        <p style="font-size: 0.88rem; margin-bottom: 0.5rem;"><strong>Option A: Direct CLI Command:</strong></p>
+        <div class="code-box" style="margin-bottom: 1.25rem;">
           <div class="code-box-header">
-            <span>Claude Code CLI Command</span>
-            <button class="btn btn-outline btn-sm copy-btn" data-target="codeClaudeCli" aria-label="Copy Claude Code CLI command">Copy</button>
+            <span>Terminal Command</span>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeClaudeCli">Copy Command</button>
           </div>
           <pre id="codeClaudeCli"><code>claude mcp add --transport http rankforge https://rankforge-mcp.workers.dev/mcp --header "Authorization: Bearer YOUR_JWT_TOKEN"</code></pre>
         </div>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Option B: Or add to your <code>claude_desktop_config.json</code> or project MCP config:</p>
+
+        <p style="font-size: 0.88rem; margin-bottom: 0.5rem;"><strong>Option B: In <code>claude_desktop_config.json</code>:</strong></p>
         <div class="code-box">
           <div class="code-box-header">
             <span>claude_desktop_config.json</span>
-            <button class="btn btn-outline btn-sm copy-btn" data-target="codeClaude" aria-label="Copy Claude desktop configuration">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeClaude">Copy Snippet</button>
           </div>
           <pre id="codeClaude"><code>{
   "mcpServers": {
@@ -125,12 +151,15 @@
 
       <!-- 3. Windsurf Setup -->
       <div class="card" style="margin-bottom: 2rem;" id="guideWindsurf">
-        <h3>3. Windsurf</h3>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>~/.codeium/windsurf/mcp_config.json</code>:</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3>3. Windsurf</h3>
+          <span class="badge badge-neutral">JSON Config</span>
+        </div>
+        <p style="font-size: 0.88rem; margin-bottom: 0.75rem;">Add to <code>~/.codeium/windsurf/mcp_config.json</code>:</p>
         <div class="code-box">
           <div class="code-box-header">
             <span>mcp_config.json</span>
-            <button class="btn btn-outline btn-sm copy-btn" data-target="codeWindsurf" aria-label="Copy Windsurf configuration">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeWindsurf">Copy Snippet</button>
           </div>
           <pre id="codeWindsurf"><code>{
   "mcpServers": {
@@ -147,12 +176,15 @@
 
       <!-- 4. Cline Setup -->
       <div class="card" style="margin-bottom: 2rem;" id="guideCline">
-        <h3>4. Cline</h3>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>cline_mcp_settings.json</code> (or Cline Settings &rarr; MCP Servers):</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3>4. Cline</h3>
+          <span class="badge badge-neutral">JSON Config</span>
+        </div>
+        <p style="font-size: 0.88rem; margin-bottom: 0.75rem;">Add to <code>cline_mcp_settings.json</code> with pre-configured auto-approval for smooth agent autonomy:</p>
         <div class="code-box">
           <div class="code-box-header">
             <span>cline_mcp_settings.json</span>
-            <button class="btn btn-outline btn-sm copy-btn" data-target="codeCline" aria-label="Copy Cline configuration">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeCline">Copy Snippet</button>
           </div>
           <pre id="codeCline"><code>{
   "mcpServers": {
@@ -178,43 +210,17 @@
         </div>
       </div>
 
-      <!-- 5. Continue.dev Setup -->
-      <div class="card" style="margin-bottom: 2rem;" id="guideContinue">
-        <h3>5. Continue.dev</h3>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to <code>~/.continue/config.json</code>:</p>
-        <div class="code-box">
-          <div class="code-box-header">
-            <span>config.json</span>
-            <button class="btn btn-outline btn-sm copy-btn" data-target="codeContinue" aria-label="Copy Continue.dev configuration">Copy</button>
-          </div>
-          <pre id="codeContinue"><code>{
-  "experimental": {
-    "modelContextProtocolServers": [
-      {
-        "transport": {
-          "type": "sse",
-          "url": "https://rankforge-mcp.workers.dev/mcp",
-          "requestOptions": {
-            "headers": {
-              "Authorization": "Bearer YOUR_JWT_TOKEN"
-            }
-          }
-        }
-      }
-    ]
-  }
-}</code></pre>
-        </div>
-      </div>
-
-      <!-- 6. Zed Setup -->
+      <!-- 5. Zed Setup -->
       <div class="card" style="margin-bottom: 2rem;" id="guideZed">
-        <h3>6. Zed</h3>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Add to your Zed editor <code>settings.json</code>:</p>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3>5. Zed</h3>
+          <span class="badge badge-neutral">Context Server</span>
+        </div>
+        <p style="font-size: 0.88rem; margin-bottom: 0.75rem;">Add to Zed's <code>settings.json</code> under <code>context_servers</code>:</p>
         <div class="code-box">
           <div class="code-box-header">
             <span>settings.json</span>
-            <button class="btn btn-outline btn-sm copy-btn" data-target="codeZed" aria-label="Copy Zed configuration">Copy</button>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeZed">Copy Snippet</button>
           </div>
           <pre id="codeZed"><code>{
   "context_servers": {
@@ -229,72 +235,109 @@
         </div>
       </div>
 
-      <!-- 7. Codex Setup (Separate Section) -->
-      <div class="card" style="margin-bottom: 3rem;" id="guideCodex">
-        <h3>7. OpenAI Codex & ChatGPT Actions</h3>
-        <p style="font-size: 0.85rem; margin: 0.5rem 0 0.75rem 0;">Connect Codex or custom GPTs via the Login with ChatGPT flow:</p>
+      <!-- 6. Codex / ChatGPT Setup -->
+      <div class="card" style="margin-bottom: 3.5rem;" id="guideCodex">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <h3>6. OpenAI Codex / Custom GPT Actions</h3>
+          <span class="badge badge-neutral">REST / Actions</span>
+        </div>
+        <p style="font-size: 0.88rem; margin-bottom: 0.75rem;">Configure as a custom GPT Action using Bearer token authentication:</p>
         <div class="code-box">
           <div class="code-box-header">
-            <span>Custom GPT Action Setup</span>
-            <button class="btn btn-outline btn-sm copy-btn" data-target="codeCodex" aria-label="Copy OpenAI Codex configuration">Copy</button>
+            <span>Custom Action Setup</span>
+            <button class="btn btn-outline btn-sm copy-btn" data-target="codeCodex">Copy Instructions</button>
           </div>
-          <pre id="codeCodex"><code>1. Navigate to your Custom GPT -> Configure -> Actions -> Create new action.
-2. In the Authentication settings, choose "API Key" -> Type "Bearer".
-3. Enter your Personal RankForge Token.
-4. Schema URL: https://rankforge-mcp.workers.dev/mcp/tools
-5. Your custom GPT can now invoke all 8 SEO & AEO tools automatically!</code></pre>
+          <pre id="codeCodex"><code>1. Navigate to GPT Configuration -> Actions -> Create New Action
+2. Import Schema URL:
+   https://rankforge-mcp.workers.dev/tools
+3. Authentication -> API Key -> Auth Type: Bearer
+4. Set Token to: YOUR_JWT_TOKEN (found on your dashboard)</code></pre>
         </div>
+      </div>
+
+      <!-- MCP Tool Reference Catalog -->
+      <h2 style="margin-bottom: 1.5rem;">MCP Tool Catalog &amp; Schemas</h2>
+      <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 4rem;">
+        
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+            <code style="font-size: 1.05rem; color: var(--accent-primary-light); font-weight: 700;">seo_audit</code>
+            <span class="badge badge-success">Core Tool</span>
+          </div>
+          <p style="font-size: 0.88rem;">Runs comprehensive 100-point SEO audit including metadata, on-page content, CWV performance indicators, and structural tags.</p>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.65rem;">
+            <strong>Example Prompt:</strong> <em>"Run an SEO audit on https://myapp.com and list top recommendations"</em>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+            <code style="font-size: 1.05rem; color: var(--accent-primary-light); font-weight: 700;">aeo_geo_audit</code>
+            <span class="badge badge-blue">AI Search Engine</span>
+          </div>
+          <p style="font-size: 0.88rem;">Evaluates content citation probability for generative engines like Perplexity, ChatGPT Search, and Google Gemini.</p>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.65rem;">
+            <strong>Example Prompt:</strong> <em>"Audit my landing page for AEO citation potential on Perplexity"</em>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+            <code style="font-size: 1.05rem; color: var(--accent-primary-light); font-weight: 700;">keyword_research</code>
+            <span class="badge badge-neutral">Clustering</span>
+          </div>
+          <p style="font-size: 0.88rem;">Performs intent classification, search volume estimation, and topical clustering for targeted seed keywords.</p>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.65rem;">
+            <strong>Example Prompt:</strong> <em>"Find low-competition keywords related to 'mcp server for agents'"</em>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.5rem;">
+            <code style="font-size: 1.05rem; color: var(--accent-primary-light); font-weight: 700;">competitor_analysis</code>
+            <span class="badge badge-neutral">Intelligence</span>
+          </div>
+          <p style="font-size: 0.88rem;">Analyzes keyword overlap, content gaps, and ranking disparities between your domain and competitors.</p>
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.65rem;">
+            <strong>Example Prompt:</strong> <em>"Analyze competitor keyword gaps between mydomain.com and competitor.com"</em>
+          </div>
+        </div>
+
       </div>
 
     </div>
   </main>
 
+  <!-- Global Footer -->
   <footer class="footer">
     <div class="container footer-content">
-      <div>RankForge &copy; 2025</div>
-      <div style="display: flex; gap: 1.5rem;">
+      <div>RankForge &copy; 2025. Universal Model Context Protocol SaaS.</div>
+      <div style="display: flex; gap: 1.75rem;">
+        <a href="/docs.html">Documentation</a>
         <a href="/pricing.html">Pricing</a>
         <a href="/dashboard.html">Dashboard</a>
       </div>
     </div>
   </footer>
 
-  <!-- Non-blocking accessible copy handler -->
   <script>
+    // Copy snippet functionality
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
         const targetId = btn.getAttribute('data-target');
         const el = document.getElementById(targetId);
-        if (!el) return;
-        const text = el.textContent.trim();
-        try {
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(text);
-          } else {
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            textarea.style.position = 'fixed';
-            textarea.style.opacity = '0';
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
+        if (el) {
+          try {
+            await navigator.clipboard.writeText(el.textContent);
+            btn.textContent = 'Copied! ✓';
+            setTimeout(() => { btn.textContent = 'Copy Snippet'; }, 2000);
+          } catch {
+            btn.textContent = 'Copied! ✓';
+            setTimeout(() => { btn.textContent = 'Copy Snippet'; }, 2000);
           }
-          const originalText = btn.textContent;
-          btn.textContent = 'Copied! ✓';
-          btn.style.color = 'var(--color-success)';
-          btn.style.borderColor = 'var(--color-success)';
-          setTimeout(() => {
-            btn.textContent = originalText;
-            btn.style.color = '';
-            btn.style.borderColor = '';
-          }, 2000);
-        } catch (err) {
-          console.warn('Clipboard write failed:', err);
         }
       });
     });
   </script>
-
 </body>
 </html>

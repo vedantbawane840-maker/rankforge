@@ -3,18 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pricing Plans — RankForge</title>
-  <meta name="description" content="Predictable developer pricing for RankForge MCP Server. Scale from solo projects to enterprise agency operations.">
+  <title>Pricing Plans — RankForge MCP Server</title>
+  <meta name="description" content="Predictable developer pricing for RankForge MCP Server. Scale from solo projects to high-volume agency operations.">
   <link rel="stylesheet" href="/assets/css/main.css">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M13 10V3L4 14h7v7l9-11h-7z'/></svg>">
 </head>
 <body>
 
-  <!-- Navigation -->
+  <!-- Ambient Backdrop Glow -->
+  <div class="ambient-glow" aria-hidden="true"></div>
+
+  <!-- Global Header / Navigation -->
   <nav class="navbar">
     <div class="container nav-content">
-      <a href="/" class="brand-logo">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      <a href="/" class="brand-logo" aria-label="RankForge Home">
+        <div class="brand-logo-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </div>
         <span>RankForge</span>
       </a>
 
@@ -32,34 +37,38 @@
     </div>
   </nav>
 
-  <main class="section">
+  <main class="section" style="padding-top: 5rem;">
     <div class="container">
       
-      <!-- Header -->
-      <div style="text-align: center; max-width: 700px; margin: 0 auto 3rem auto;">
-        <span class="badge badge-blue">Transparent Pricing</span>
-        <h1 style="margin: 0.75rem 0;">Simple Plans for Every Developer</h1>
-        <p style="font-size: 1.1rem; color: var(--text-secondary);">Empower your AI coding agents with server-side SEO and AEO intelligence.</p>
+      <!-- Pricing Header -->
+      <div style="text-align: center; max-width: 760px; margin: 0 auto 3.5rem auto;">
+        <span class="badge badge-blue">Predictable Developer Billing</span>
+        <h1 style="margin: 0.75rem 0 1rem 0;">Simple Plans for Every Developer</h1>
+        <p style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6;">
+          Zero compute markup. Transparent monthly audit quotas. Scale from solo side-projects to high-throughput client agencies.
+        </p>
 
-        <!-- Billing Interval Toggle -->
-        <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-top: 1.75rem;">
-          <span style="font-size: 0.9rem; font-weight: 500;">Monthly</span>
-          <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
+        <!-- Billing Interval Toggle Switch -->
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0.85rem; margin-top: 2rem;">
+          <span style="font-size: 0.92rem; font-weight: 500; color: var(--text-secondary);">Monthly</span>
+          <label style="position: relative; display: inline-block; width: 48px; height: 26px; cursor: pointer;">
             <input type="checkbox" id="billingIntervalToggle" aria-label="Toggle between monthly and annual billing" style="opacity: 0; width: 0; height: 0;">
-            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 24px; transition: .2s;"></span>
+            <span style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--bg-card); border: 1px solid var(--border-default); border-radius: 26px; transition: .25s;"></span>
           </label>
-          <span style="font-size: 0.9rem; font-weight: 500;">Annual <span class="badge badge-success" style="margin-left: 0.25rem;">Save 20%</span></span>
+          <span style="font-size: 0.92rem; font-weight: 500; color: var(--text-primary);">
+            Annual <span class="badge badge-success" style="margin-left: 0.35rem;">Save 20%</span>
+          </span>
         </div>
       </div>
 
       <!-- 4 Plan Cards Grid -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 4rem;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 4.5rem;">
         
         <!-- FREE Plan -->
         <div class="card" data-plan-card="free" style="display: flex; flex-direction: column;">
-          <h3>FREE</h3>
+          <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">FREE</div>
           <div style="margin: 0.75rem 0 1.5rem 0;">
-            <span style="font-size: 2.5rem; font-weight: 700;">$0</span>
+            <span style="font-size: 2.75rem; font-weight: 800; color: #f0f6fc;">$0</span>
             <span style="font-size: 0.85rem; color: var(--text-muted);">/mo</span>
           </div>
 
@@ -67,23 +76,24 @@
             Start Free
           </a>
 
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto;">
-            <li>✓ 1 project</li>
-            <li>✓ 10 audits/month</li>
-            <li>✓ Basic SEO audit only</li>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+            <li>✓ <strong>1 active project</strong></li>
+            <li>✓ <strong>10 audits/month</strong></li>
+            <li>✓ Basic <code>seo_audit</code> tool</li>
+            <li>✓ Universal IDE config</li>
             <li>✓ Community support</li>
           </ul>
         </div>
 
         <!-- PRO Plan (Most Popular) -->
-        <div class="card" data-plan-card="pro" style="display: flex; flex-direction: column; border-color: var(--accent-blue); position: relative;">
-          <div style="position: absolute; top: 1rem; right: 1rem;">
-            <span class="badge badge-blue">MOST POPULAR</span>
+        <div class="card card-glow" data-plan-card="pro" style="display: flex; flex-direction: column; position: relative;">
+          <div style="position: absolute; top: 1.25rem; right: 1.25rem;">
+            <span class="badge badge-blue">POPULAR</span>
           </div>
 
-          <h3>PRO</h3>
+          <div style="font-size: 0.85rem; font-weight: 700; color: var(--accent-primary-light); text-transform: uppercase; letter-spacing: 0.05em;">PRO</div>
           <div style="margin: 0.75rem 0 1.5rem 0;">
-            <span id="pricePro" style="font-size: 2.5rem; font-weight: 700; color: var(--accent-blue);">$29</span>
+            <span id="pricePro" style="font-size: 2.75rem; font-weight: 800; color: #ffffff;">$29</span>
             <span style="font-size: 0.85rem; color: var(--text-muted);">/mo</span>
           </div>
 
@@ -91,20 +101,21 @@
             Get Pro
           </button>
 
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto;">
-            <li>✓ <strong>5 projects</strong></li>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+            <li>✓ <strong>5 active projects</strong></li>
             <li>✓ <strong>100 audits/month</strong></li>
-            <li>✓ <strong>All 8 SEO tools</strong></li>
-            <li>✓ <strong>AEO/GEO audit</strong></li>
-            <li>✓ Email support</li>
+            <li>✓ <strong>All 8 SEO MCP tools</strong></li>
+            <li>✓ <strong>AEO &amp; Perplexity engine</strong></li>
+            <li>✓ Keyword intent clustering</li>
+            <li>✓ Standard email support</li>
           </ul>
         </div>
 
         <!-- AGENCY Plan -->
         <div class="card" data-plan-card="agency" style="display: flex; flex-direction: column;">
-          <h3>AGENCY</h3>
+          <div style="font-size: 0.85rem; font-weight: 700; color: var(--color-warning); text-transform: uppercase; letter-spacing: 0.05em;">AGENCY</div>
           <div style="margin: 0.75rem 0 1.5rem 0;">
-            <span id="priceAgency" style="font-size: 2.5rem; font-weight: 700;">$79</span>
+            <span id="priceAgency" style="font-size: 2.75rem; font-weight: 800; color: #f0f6fc;">$79</span>
             <span style="font-size: 0.85rem; color: var(--text-muted);">/mo</span>
           </div>
 
@@ -112,19 +123,21 @@
             Get Agency
           </button>
 
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto;">
-            <li>✓ <strong>25 projects</strong></li>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+            <li>✓ <strong>25 active projects</strong></li>
             <li>✓ <strong>500 audits/month</strong></li>
-            <li>✓ <strong>All tools + white label reports</strong></li>
-            <li>✓ Priority support</li>
+            <li>✓ <strong>All 8 SEO MCP tools</strong></li>
+            <li>✓ <strong>White-label executive reports</strong></li>
+            <li>✓ Competitor teardown engine</li>
+            <li>✓ Priority email support</li>
           </ul>
         </div>
 
         <!-- ENTERPRISE Plan -->
         <div class="card" data-plan-card="enterprise" style="display: flex; flex-direction: column;">
-          <h3>ENTERPRISE</h3>
+          <div style="font-size: 0.85rem; font-weight: 700; color: var(--color-success); text-transform: uppercase; letter-spacing: 0.05em;">ENTERPRISE</div>
           <div style="margin: 0.75rem 0 1.5rem 0;">
-            <span id="priceEnterprise" style="font-size: 2.5rem; font-weight: 700;">$199</span>
+            <span id="priceEnterprise" style="font-size: 2.75rem; font-weight: 800; color: #f0f6fc;">$199</span>
             <span style="font-size: 0.85rem; color: var(--text-muted);">/mo</span>
           </div>
 
@@ -132,49 +145,149 @@
             Get Enterprise
           </button>
 
-          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto;">
-            <li>✓ <strong>Unlimited projects</strong></li>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: var(--text-secondary); margin-top: auto; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+            <li>✓ <strong>Unlimited active projects</strong></li>
             <li>✓ <strong>Unlimited audits</strong></li>
-            <li>✓ <strong>Custom branding</strong></li>
-            <li>✓ <strong>Dedicated support</strong></li>
-            <li>✓ <strong>Team seats (5)</strong></li>
+            <li>✓ <strong>5 team member seats</strong></li>
+            <li>✓ Custom brand watermark</li>
+            <li>✓ Custom MCP tools on-demand</li>
+            <li>✓ 1-on-1 Slack/Discord channel</li>
           </ul>
         </div>
 
       </div>
 
+      <!-- Plan Feature Comparison Table -->
+      <div style="margin-bottom: 5rem;">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Feature Comparison Matrix</h2>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Feature Capability</th>
+                <th>Free ($0)</th>
+                <th>Pro ($29)</th>
+                <th>Agency ($79)</th>
+                <th>Enterprise ($199)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Monthly Audit Limit</td>
+                <td>10</td>
+                <td>100</td>
+                <td>500</td>
+                <td><strong>Unlimited</strong></td>
+              </tr>
+              <tr>
+                <td>Active Connected Domains</td>
+                <td>1</td>
+                <td>5</td>
+                <td>25</td>
+                <td><strong>Unlimited</strong></td>
+              </tr>
+              <tr>
+                <td>Basic Technical &amp; On-Page Audit</td>
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>AEO &amp; Answer Engine Engine (Perplexity/GPT)</td>
+                <td>—</td>
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>Keyword Clustering &amp; Intent Analysis</td>
+                <td>—</td>
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>Competitor Keyword Overlap Analysis</td>
+                <td>—</td>
+                <td>✓</td>
+                <td>✓</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>White-Label Client Reports</td>
+                <td>—</td>
+                <td>—</td>
+                <td>✓</td>
+                <td>✓</td>
+              </tr>
+              <tr>
+                <td>Dedicated Team Seats</td>
+                <td>1</td>
+                <td>1</td>
+                <td>1</td>
+                <td><strong>5 Seats</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- FAQ Section -->
-      <div style="max-width: 760px; margin: 0 auto;">
-        <h2 style="text-align: center; margin-bottom: 2rem;">Billing FAQs</h2>
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
-          <div class="card" style="padding: 1.25rem;">
+      <div style="max-width: 800px; margin: 0 auto 3rem auto;">
+        <h2 style="text-align: center; margin-bottom: 2rem;">Frequently Asked Questions</h2>
+        <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+          
+          <div class="card">
+            <h4>How do Apify actor compute costs work?</h4>
+            <p style="font-size: 0.88rem; margin-top: 0.4rem; line-height: 1.6;">
+              RankForge operates on a Bring Your Own Key (BYOK) model. We charge exactly $0 markup on web crawlers, SERP scrapers, or proxies. All compute runs directly on your Apify account with full transparency.
+            </p>
+          </div>
+
+          <div class="card">
             <h4>What payment methods are supported?</h4>
-            <p style="font-size: 0.85rem; margin-top: 0.35rem;">Payments are securely handled via Dodo Payments supporting credit cards, debit cards, and Apple Pay globally.</p>
+            <p style="font-size: 0.88rem; margin-top: 0.4rem; line-height: 1.6;">
+              Subscriptions are securely handled globally through Dodo Payments, accepting Visa, Mastercard, American Express, Apple Pay, and Google Pay in over 135 currencies.
+            </p>
           </div>
-          <div class="card" style="padding: 1.25rem;">
-            <h4>Can I change or cancel my plan at any time?</h4>
-            <p style="font-size: 0.85rem; margin-top: 0.35rem;">Yes, you can upgrade, downgrade, or cancel your subscription at any time directly through the dashboard with zero lock-in.</p>
+
+          <div class="card">
+            <h4>Can I cancel or change my plan anytime?</h4>
+            <p style="font-size: 0.88rem; margin-top: 0.4rem; line-height: 1.6;">
+              Yes. You can upgrade, downgrade, or cancel your subscription at any time directly through the dashboard with zero lock-in or cancellation fees.
+            </p>
           </div>
-          <div class="card" style="padding: 1.25rem;">
-            <h4>How do Apify actor costs work?</h4>
-            <p style="font-size: 0.85rem; margin-top: 0.35rem;">RankForge charges $0 markup on Apify runs. You bring your own Apify key, and Apify bills you directly for standard actor compute.</p>
+
+          <div class="card">
+            <h4>What happens if I exceed my monthly audit limit?</h4>
+            <p style="font-size: 0.88rem; margin-top: 0.4rem; line-height: 1.6;">
+              When your monthly limit is reached, tools return a polite upgrade message to your AI agent. You can upgrade immediately to a higher tier, or wait for your quota to reset at the start of your billing cycle.
+            </p>
           </div>
+
         </div>
       </div>
 
     </div>
   </main>
 
+  <!-- Global Footer -->
   <footer class="footer">
     <div class="container footer-content">
-      <div>RankForge &copy; 2025</div>
-      <div style="display: flex; gap: 1.5rem;">
+      <div>RankForge &copy; 2025. Universal Model Context Protocol SaaS.</div>
+      <div style="display: flex; gap: 1.75rem;">
         <a href="/docs.html">Documentation</a>
+        <a href="/pricing.html">Pricing</a>
         <a href="/dashboard.html">Dashboard</a>
       </div>
     </div>
   </footer>
 
-  <script type="module" src="/assets/js/billing.js"></script>
+  <script type="module">
+    import { initBilling, highlightCurrentPlan } from '/assets/js/billing.js';
+    initBilling();
+    highlightCurrentPlan();
+  </script>
 </body>
 </html>
