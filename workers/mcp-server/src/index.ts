@@ -39,8 +39,8 @@ const ALL_TOOLS = [
  */
 app.get('/mcp/health', (c) => {
   return c.json({
-    status: 'healthy',
-    service: 'RankForge MCP Server',
+    status: 'ok',
+    service: 'RankForge MCP',
     version: '1.0.0',
     protocol: 'JSON-RPC 2.0 / MCP',
     timestamp: new Date().toISOString(),
@@ -108,7 +108,7 @@ app.post('/mcp', async (c) => {
           }
         },
         serverInfo: {
-          name: 'rankforge-mcp',
+          name: 'RankForge',
           version: '1.0.0'
         }
       }

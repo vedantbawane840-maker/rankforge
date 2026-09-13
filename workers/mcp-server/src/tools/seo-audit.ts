@@ -29,6 +29,11 @@ export async function executeSeoAudit(
   params: SeoAuditParams,
   apifyToken: string | null
 ): Promise<Record<string, unknown>> {
+  // Input validation runs before any external crawler or Apify call
+  if (!params || !params.url || typeof params.url !== 'string' || !params.url.trim()) {
+    throw new Error("Missing required field: 'url' must be a valid non-empty string URL (e.g. 'https://example.com'). Visit rankforge.app/docs.");
+  }
+
   try {
     const url = params.url.trim();
     const auditType = params.audit_type || 'full';
@@ -126,7 +131,10 @@ export async function executeSeoAudit(
       },
       prioritized_action_items: prioritizedIssues
     };
-  } catch {
+  } catch (err: unknown) {
+    if (err instanceof Error && (err.message.includes('required') || err.message.includes('Invalid'))) {
+      throw err;
+    }
     throw new Error('SEO Audit encountered an unexpected error. Please verify the URL and visit rankforge.app for troubleshooting.');
   }
 }
